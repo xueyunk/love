@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李琦 ❤️ 孙宇诗</title>
+<style>
+/* ========== Password Overlay ========== */
+.password-overlay {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 40%, #f48fb1 70%, #f8bbd0 100%);
+  background-size: 400% 400%;
+  animation: bgShift 20s ease infinite;
+  z-index: 99999;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+.password-overlay.hidden {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+.password-overlay .pwd-heart {
+  font-size: 5rem;
+  animation: heartbeat 1.2s ease-in-out infinite;
+  margin-bottom: 16px;
+}
+.password-overlay .pwd-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 2.5rem;
+  color: var(--deep);
+  margin-bottom: 8px;
+}
+.password-overlay .pwd-subtitle {
+  font-size: 0.95rem;
+  color: var(--deep);
+  opacity: 0.6;
+  margin-bottom: 32px;
+}
+.password-overlay .pwd-input-wrap {
+  display: flex; gap: 8px;
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 30px;
+  padding: 4px 4px 4px 20px;
+  box-shadow: 0 4px 20px rgba(196,69,105,0.12);
+}
+.password-overlay .pwd-input-wrap input {
+  border: none; outline: none; background: transparent;
+  font-size: 1.1rem; font-family: inherit; letter-spacing: 4px;
+  color: var(--dark); width: 160px;
+}
+.password-overlay .pwd-input-wrap input::placeholder {
+  letter-spacing: 0;
+  color: rgba(196,69,105,0.4);
+}
+.password-overlay .pwd-input-wrap button {
+  padding: 10px 24px; border: none; border-radius: 26px;
+  background: linear-gradient(135deg, var(--rose), var(--pink));
+  color: white; font-size: 1rem; cursor: pointer;
+  font-family: inherit; font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.password-overlay .pwd-input-wrap button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px rgba(196,69,105,0.3);
+}
+.password-overlay .pwd-error {
+  margin-top: 14px; font-size: 0.9rem;
+  color: #e74c3c; min-height: 22px;
+  transition: opacity 0.3s;
+}
+.password-overlay .pwd-shake {
+  animation: shake 0.5s ease;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --pink: #ff7eb3;
+  --rose: #ff6b9d;
+  --deep: #c44569;
+  --gold: #f6c177;
+  --light: #fff0f5;
+  --white: #ffffff;
+  --dark: #3d2c3a;
+  --glass: rgba(255,255,255,0.15);
+  --glass-border: rgba(255,255,255,0.3);
+}
+
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'ZCOOL XiaoWei', 'Microsoft YaHei', serif;
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 25%, #f48fb1 50%, #f8bbd0 75%, #fce4ec 100%);
+  background-size: 400% 400%;
+  animation: bgShift 20s ease infinite;
+  color: var(--dark);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+@keyframes bgShift {
+  0%,100% { background-position:0% 50%; }
+  50% { background-position:100% 50%; }
+}
+
+/* Floating Hearts */
+.hearts-container {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.heart-float {
+  position: absolute; bottom: -100px;
+  animation: floatUp var(--dur) linear var(--delay) infinite;
+  font-size: var(--size);
+  opacity: 0.35;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.35; }
+  50% { opacity: 0.5; }
+  100% { transform: translateY(-110vh) rotate(360deg) scale(0.3); opacity: 0; }
+}
+
+/* Navigation */
+nav {
+  position: fixed; top:0; width:100%; z-index:1000;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding: 12px 0;
+  transition: all 0.3s;
+}
+nav .nav-inner {
+  max-width: 900px; margin: 0 auto;
+  display: flex; justify-content: center; gap: 28px;
+  flex-wrap: wrap; padding: 0 20px;
+}
+nav a {
+  text-decoration: none; color: var(--deep);
+  font-size: 1rem; font-weight: 700;
+  position: relative; padding: 4px 0;
+  transition: color 0.3s;
+}
+nav a::after {
+  content: ''; position: absolute; bottom: 0; left: 50%;
+  width: 0; height: 2px;
+  background: var(--rose);
+  transition: all 0.3s; transform: translateX(-50%);
+}
+nav a:hover { color: var(--rose); }
+nav a:hover::after { width: 100%; }
+
+/* Sections */
+section {
+  position: relative; z-index: 1;
+  max-width: 1000px; margin: 0 auto;
+  padding: 80px 24px;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding-top: 60px;
+}
+.hero .heart-icon {
+  font-size: 5rem; animation: heartbeat 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255,107,157,0.5));
+}
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+  60% { transform: scale(1); }
+}
+.hero h1 {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  background: linear-gradient(135deg, #c44569, #e66767, #f6c177);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 16px 0 8px;
+  line-height: 1.3;
+}
+.hero .subtitle {
+  font-size: 1.2rem; color: var(--deep);
+  opacity: 0.8; margin-bottom: 24px;
+  letter-spacing: 4px;
+}
+.hero .days-card {
+  background: var(--glass); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px; padding: 32px 48px;
+  margin: 16px 0; box-shadow: 0 8px 32px rgba(196,69,105,0.15);
+}
+.hero .days-card .days-num {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b9d, #f6c177);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.hero .days-card .days-label {
+  font-size: 1rem; color: var(--deep);
+  margin-top: 8px; opacity: 0.7;
+}
+.hero .start-date {
+  margin-top: 16px; font-size: 0.95rem;
+  color: var(--deep); opacity: 0.6;
+}
+.hero .scroll-hint {
+  position: absolute; bottom: 30px;
+  font-size: 1.8rem; animation: bounce 2s ease-in-out infinite;
+  color: var(--deep); opacity: 0.5; cursor: pointer;
+}
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(12px); }
+}
+
+/* Section Titles */
+.section-title {
+  text-align: center; margin-bottom: 48px;
+}
+.section-title h2 {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--deep);
+}
+.section-title .line {
+  width: 60px; height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--gold));
+  margin: 12px auto; border-radius: 3px;
+}
+
+/* Glass Card */
+.glass-card {
+  background: var(--glass); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px; padding: 32px;
+  box-shadow: 0 8px 32px rgba(196,69,105,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(196,69,105,0.18);
+}
+
+/* Timeline */
+.timeline { position: relative; padding: 20px 0; }
+.timeline::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 3px; background: linear-gradient(180deg, var(--pink), var(--gold));
+  transform: translateX(-50%); border-radius: 2px;
+}
+.timeline-item {
+  display: flex; align-items: center; margin-bottom: 40px;
+  position: relative; width: 100%;
+}
+.timeline-item:nth-child(odd) { flex-direction: row; }
+.timeline-item:nth-child(even) { flex-direction: row-reverse; }
+.timeline-item .dot {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--rose); z-index: 2;
+  box-shadow: 0 0 0 6px rgba(255,107,157,0.2);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { box-shadow: 0 0 0 6px rgba(255,107,157,0.2); }
+  50% { box-shadow: 0 0 0 14px rgba(255,107,157,0.05); }
+}
+.timeline-item .content {
+  width: 42%; padding: 20px 24px;
+  background: var(--glass); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(196,69,105,0.08);
+}
+.timeline-item:nth-child(odd) .content { text-align: right; margin-right: 8%; }
+.timeline-item:nth-child(even) .content { text-align: left; margin-left: 8%; }
+.timeline-item .content .date-tag {
+  display: inline-block; padding: 4px 14px;
+  background: linear-gradient(135deg, var(--rose), var(--pink));
+  color: white; border-radius: 20px; font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+.timeline-item .content h3 { color: var(--deep); margin-bottom: 6px; font-size: 1.1rem; }
+.timeline-item .content p { color: var(--dark); opacity: 0.7; font-size: 0.9rem; }
+
+/* Photo Gallery */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.gallery-item {
+  position: relative; border-radius: 16px; overflow: hidden;
+  cursor: pointer; aspect-ratio: 3/4;
+  box-shadow: 0 4px 16px rgba(196,69,105,0.12);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.gallery-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 28px rgba(196,69,105,0.25);
+}
+.gallery-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s;
+}
+.gallery-item:hover img { transform: scale(1.1); }
+.gallery-item .overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  color: white; font-size: 0.9rem;
+  opacity: 0; transition: opacity 0.3s;
+}
+.gallery-item:hover .overlay { opacity: 1; }
+
+/* Placeholder for empty photos */
+.gallery-item.placeholder {
+  background: linear-gradient(135deg, rgba(255,126,179,0.2), rgba(246,193,119,0.2));
+  display: flex; align-items: center; justify-content: center;
+  border: 2px dashed rgba(196,69,105,0.3);
+}
+.gallery-item.placeholder::after {
+  content: '📷\A放张照片吧';
+  white-space: pre;
+  text-align: center;
+  color: var(--deep); opacity: 0.5;
+  font-size: 0.9rem; line-height: 1.6;
+}
+
+/* Lightbox */
+.lightbox {
+  display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.9); z-index: 9999;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(10px);
+}
+.lightbox.active { display: flex; }
+.lightbox img {
+  max-width: 90vw; max-height: 85vh;
+  border-radius: 12px; box-shadow: 0 0 60px rgba(255,107,157,0.3);
+  animation: zoomIn 0.3s ease;
+}
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.lightbox .close {
+  position: absolute; top: 24px; right: 36px;
+  font-size: 2.5rem; color: white; cursor: pointer;
+  transition: color 0.3s;
+}
+.lightbox .close:hover { color: var(--pink); }
+.lightbox .caption {
+  position: absolute; bottom: 40px; color: white;
+  font-size: 1.1rem; text-align: center;
+}
+
+/* Message Board */
+.msg-form {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 32px;
+}
+.msg-form input, .msg-form textarea {
+  padding: 14px 18px; border: 1px solid var(--glass-border);
+  border-radius: 12px; font-size: 1rem;
+  font-family: inherit;
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(10px);
+  outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+  color: var(--dark);
+}
+.msg-form input:focus, .msg-form textarea:focus {
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px rgba(255,107,157,0.15);
+}
+.msg-form textarea { resize: vertical; min-height: 80px; }
+.msg-form button {
+  padding: 12px 32px; border: none; border-radius: 30px;
+  background: linear-gradient(135deg, var(--rose), var(--pink));
+  color: white; font-size: 1rem; cursor: pointer;
+  font-family: inherit; font-weight: 700;
+  transition: transform 0.3s, box-shadow 0.3s;
+  align-self: flex-end;
+}
+.msg-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(196,69,105,0.3);
+}
+.messages-list {
+  display: flex; flex-direction: column; gap: 16px;
+  max-height: 500px; overflow-y: auto; padding-right: 8px;
+}
+.messages-list::-webkit-scrollbar { width: 6px; }
+.messages-list::-webkit-scrollbar-thumb {
+  background: var(--pink); border-radius: 3px;
+}
+.msg-bubble {
+  background: var(--white);
+  border-radius: 16px; padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  position: relative;
+}
+.msg-bubble .msg-author {
+  font-weight: 700; color: var(--rose);
+  margin-bottom: 4px; font-size: 0.95rem;
+}
+.msg-bubble .msg-text { color: var(--dark); line-height: 1.6; }
+.msg-bubble .msg-time {
+  font-size: 0.78rem; color: #999; margin-top: 8px;
+}
+.msg-bubble .msg-del {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none; color: #ccc; cursor: pointer;
+  font-size: 1rem; transition: color 0.3s;
+}
+.msg-bubble .msg-del:hover { color: var(--rose); }
+.empty-msgs {
+  text-align: center; color: var(--deep); opacity: 0.5;
+  padding: 40px 0;
+}
+
+/* Love Letter */
+.love-letter {
+  max-width: 680px; margin: 0 auto;
+  background: var(--white);
+  border-radius: 16px; padding: 40px 36px;
+  box-shadow: 0 4px 24px rgba(196,69,105,0.1);
+  position: relative;
+  line-height: 2; font-size: 1.05rem;
+  color: var(--dark);
+}
+.love-letter::before {
+  content: '💌'; position: absolute; top: -24px; left: 32px;
+  font-size: 2.5rem;
+}
+.love-letter .signature {
+  text-align: right; margin-top: 24px;
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 1.4rem; color: var(--rose);
+}
+
+/* Countdown */
+.countdown-grid {
+  display: flex; justify-content: center; gap: 24px;
+  flex-wrap: wrap;
+}
+.countdown-item {
+  text-align: center; min-width: 80px;
+}
+.countdown-item .num {
+  font-size: 2.5rem; font-weight: 900;
+  color: var(--rose);
+  background: var(--white);
+  border-radius: 16px; padding: 16px 10px;
+  box-shadow: 0 4px 16px rgba(196,69,105,0.1);
+}
+.countdown-item .label {
+  margin-top: 8px; color: var(--deep); opacity: 0.6;
+  font-size: 0.85rem;
+}
+
+/* Music Toggle */
+.music-btn {
+  position: fixed; bottom: 28px; right: 28px; z-index: 1000;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--white);
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(196,69,105,0.2);
+  font-size: 1.4rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex; align-items: center; justify-content: center;
+}
+.music-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(196,69,105,0.35);
+}
+.music-btn.playing { animation: musicPulse 1.5s ease infinite; }
+@keyframes musicPulse {
+  0%,100% { box-shadow: 0 4px 16px rgba(196,69,105,0.2); }
+  50% { box-shadow: 0 4px 30px rgba(196,69,105,0.5); }
+}
+
+/* Quotes */
+.quote-box {
+  text-align: center; padding: 40px 20px;
+  font-style: italic; font-size: 1.15rem;
+  color: var(--deep);
+  transition: opacity 0.5s;
+}
+.quote-box .quote-author {
+  margin-top: 12px; font-size: 0.9rem;
+  opacity: 0.6; font-style: normal;
+}
+
+/* Footer */
+footer {
+  text-align: center; padding: 40px 20px;
+  color: var(--deep); opacity: 0.6;
+  font-size: 0.9rem;
+}
+footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
+
+/* Fade In */
+.fade-in {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav .nav-inner { gap: 16px; }
+  nav a { font-size: 0.85rem; }
+  .hero .days-card { padding: 24px 32px; }
+  .timeline::before { left: 24px; }
+  .timeline-item, .timeline-item:nth-child(odd), .timeline-item:nth-child(even) {
+    flex-direction: row; padding-left: 56px;
+  }
+  .timeline-item .dot { left: 24px; }
+  .timeline-item .content, .timeline-item:nth-child(odd) .content,
+  .timeline-item:nth-child(even) .content {
+    width: 100%; text-align: left; margin: 0;
+  }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .countdown-grid { gap: 12px; }
+  .countdown-item { min-width: 64px; }
+  .countdown-item .num { font-size: 1.8rem; padding: 12px 6px; }
+}
+
+@media (max-width: 480px) {
+  nav a { font-size: 0.78rem; }
+  section { padding: 60px 16px; }
+  .love-letter { padding: 28px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== Password Protection ========== -->
+<div class="password-overlay" id="pwdOverlay">
+  <div class="pwd-heart">💕</div>
+  <div class="pwd-title">李琦 ❤️ 孙宇诗</div>
+  <div class="pwd-subtitle">属于我们的秘密花园</div>
+  <div class="pwd-input-wrap" id="pwdWrap">
+    <input type="password" id="pwdInput" placeholder="请输入密码" maxlength="20" onkeydown="if(event.key==='Enter')checkPassword()">
+    <button onclick="checkPassword()">🔒 进入</button>
+  </div>
+  <div class="pwd-error" id="pwdError"></div>
+</div>
+
+<!-- Floating Hearts -->
+<div class="hearts-container" id="heartsContainer"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <a href="#home">🏠 首页</a>
+    <a href="#story">📖 我们的故事</a>
+    <a href="#gallery">🖼️ 照片墙</a>
+    <a href="#letter">💌 情书</a>
+    <a href="#messages">💬 留言板</a>
+    <a href="#countdown">⏳ 纪念日</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="home">
+  <div class="heart-icon">💕</div>
+  <h1>李琦 ❤️ 孙宇诗</h1>
+  <p class="subtitle">执 子 之 手 · 与 子 偕 老</p>
+  <div class="days-card">
+    <div class="days-num" id="daysCount">0</div>
+    <div class="days-label">我们已经在一起</div>
+  </div>
+  <p class="start-date">始于 2025年10月21日</p>
+  <div class="scroll-hint" onclick="document.getElementById('story').scrollIntoView()">⌄</div>
+</section>
+
+<!-- Story Timeline -->
+<section id="story">
+  <div class="section-title">
+    <h2>我们的故事</h2>
+    <div class="line"></div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item fade-in">
+      <div class="dot"></div>
+      <div class="content">
+        <span class="date-tag">2025-10-21</span>
+        <h3>💘 我们在一起了</h3>
+        <p>这一天，两颗心开始交织。李琦和孙宇诗正式在一起，开启了属于他们的爱情故事。</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="dot"></div>
+      <div class="content">
+        <span class="date-tag">2025-12-25</span>
+        <h3>🎄 第一个圣诞节</h3>
+        <p>一起过的第一个圣诞节，虽然冬天很冷，但有你在身边，一切都那么温暖。</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="dot"></div>
+      <div class="content">
+        <span class="date-tag">2026-01-01</span>
+        <h3>🎆 跨年之夜</h3>
+        <p>一起倒数跨年，在新年的第一秒对你说"我爱你"，新的一年也要一直在一起。</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="dot"></div>
+      <div class="content">
+        <span class="date-tag">2026-02-14</span>
+        <h3>🌹 第一个情人节</h3>
+        <p>第一个属于我们的情人节，一束玫瑰比不上你笑容的万分之一。</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="dot"></div>
+      <div class="content">
+        <span class="date-tag" id="todayTag">今天</span>
+        <h3>💫 故事继续</h3>
+        <p>每一天都是新的篇章，我们的故事还在继续书写中……</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Photo Gallery -->
+<section id="gallery">
+  <div class="section-title">
+    <h2>照片墙</h2>
+    <div class="line"></div>
+    <p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">点击照片查看大图 · 把你们的合照放进 photos 文件夹</p>
+  </div>
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+    <div class="gallery-item placeholder" onclick="alert('把你们的合照放在 love/photos/ 文件夹里，命名为 01.jpg ~ 08.jpg 就可以啦~')"></div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="close">&times;</span>
+  <img src="" alt="" id="lightboxImg">
+  <div class="caption" id="lightboxCaption"></div>
+</div>
+
+<!-- Love Letter -->
+<section id="letter">
+  <div class="section-title">
+    <h2>写给你的话</h2>
+    <div class="line"></div>
+  </div>
+  <div class="love-letter fade-in">
+    <p>亲爱的孙宇诗：</p>
+    <p>从2025年10月21日那天起，我的世界就变得不一样了。</p>
+    <p>遇见你，是我这辈子最幸运的事。你的笑容是我每天醒来的动力，你的声音是我听过最动听的旋律。和你在一起的每一天，平凡的日子也闪闪发光。</p>
+    <p>我喜欢看你笑起来眼睛弯弯的样子，喜欢你认真做事的专注，喜欢你偶尔的小脾气——因为你的一切，我都喜欢。</p>
+    <p>我想陪你看遍世间所有的风景，陪你走过春夏秋冬，陪你吃遍天下美食，陪你度过每一个平凡或不平凡的日子。</p>
+    <p>无论未来怎样，我都想牵着你的手，一直走下去。</p>
+    <p>谢谢你出现在我的生命里。</p>
+    <div class="signature">—— 永远爱你的 李琦</div>
+  </div>
+</section>
+
+<!-- Message Board -->
+<section id="messages">
+  <div class="section-title">
+    <h2>留言板</h2>
+    <div class="line"></div>
+    <p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">把想说的话留在这里吧</p>
+  </div>
+  <div class="glass-card fade-in">
+    <div class="msg-form">
+      <input type="text" id="msgAuthor" placeholder="你的名字" maxlength="20">
+      <textarea id="msgText" placeholder="写下你想说的话……" maxlength="500"></textarea>
+      <button onclick="addMessage()">💝 留下足迹</button>
+    </div>
+    <div class="messages-list" id="messagesList">
+      <div class="empty-msgs">还没有留言，来做第一个留言的人吧 💕</div>
+    </div>
+  </div>
+</section>
+
+<!-- Anniversary Countdown -->
+<section id="countdown">
+  <div class="section-title">
+    <h2>下一个纪念日</h2>
+    <div class="line"></div>
+    <p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">距离在一起的第 <strong id="nextAnniversaryYears">1</strong> 周年还有</p>
+  </div>
+  <div class="countdown-grid fade-in" id="countdownGrid">
+    <div class="countdown-item">
+      <div class="num" id="cd-days">0</div>
+      <div class="label">天</div>
+    </div>
+    <div class="countdown-item">
+      <div class="num" id="cd-hours">0</div>
+      <div class="label">时</div>
+    </div>
+    <div class="countdown-item">
+      <div class="num" id="cd-mins">0</div>
+      <div class="label">分</div>
+    </div>
+    <div class="countdown-item">
+      <div class="num" id="cd-secs">0</div>
+      <div class="label">秒</div>
+    </div>
+  </div>
+</section>
+
+<!-- Love Quotes -->
+<section>
+  <div class="quote-box fade-in" id="quoteBox">
+    <p id="quoteText"></p>
+    <p class="quote-author" id="quoteAuthor"></p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-hearts">💕 💕 💕</div>
+  <p>李琦 ❤️ 孙宇诗 · Forever & Always</p>
+  <p style="margin-top:4px;">愿得一人心，白首不相离</p>
+</footer>
+
+<!-- Music Toggle -->
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="播放音乐">🎵</button>
+
+<script>
+// ==================== PASSWORD CHECK ====================
+var PASSWORD = '20251021';
+
+function checkPassword() {
+  var input = document.getElementById('pwdInput').value;
+  var error = document.getElementById('pwdError');
+  var wrap = document.getElementById('pwdWrap');
+
+  if (input === PASSWORD) {
+    document.getElementById('pwdOverlay').classList.add('hidden');
+    if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880; osc.type = 'sine';
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.5);
+    }
+  } else {
+    error.textContent = '密码不对哦，再试试吧 💕';
+    wrap.classList.add('pwd-shake');
+    setTimeout(function() { wrap.classList.remove('pwd-shake'); }, 500);
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').focus();
+  }
+}
+
+// Auto-focus password input
+document.getElementById('pwdInput').focus();
+
+// ==================== START DATE ====================
+var START_DATE = new Date('2025-10-21');
+
+// ==================== FLOATING HEARTS ====================
+var heartsContainer = document.getElementById('heartsContainer');
+var heartEmojis = ['❤️', '💕', '💖', '💗', '💘', '💝', '💞', '🩷', '💓', '✨', '🌸', '🌷'];
+
+function createHeart() {
+  var heart = document.createElement('span');
+  heart.className = 'heart-float';
+  heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+  heart.style.left = Math.random() * 100 + '%';
+  heart.style.setProperty('--dur', (8 + Math.random() * 12) + 's');
+  heart.style.setProperty('--delay', Math.random() * 5 + 's');
+  heart.style.setProperty('--size', (1 + Math.random() * 2) + 'rem');
+  heartsContainer.appendChild(heart);
+  var duration = parseFloat(heart.style.getPropertyValue('--dur')) + parseFloat(heart.style.getPropertyValue('--delay'));
+  setTimeout(function() { heart.remove(); }, duration * 1000 + 500);
+}
+
+for (var i = 0; i < 15; i++) {
+  setTimeout(createHeart, i * 400);
+}
+setInterval(createHeart, 2000);
+
+// ==================== DAYS COUNTER ====================
+var daysEl = document.getElementById('daysCount');
+function updateDaysCounter() {
+  var now = new Date();
+  var diffDays = Math.floor((now - START_DATE) / (1000 * 60 * 60 * 24));
+  daysEl.textContent = diffDays;
+}
+updateDaysCounter();
+setInterval(updateDaysCounter, 60000);
+
+// ==================== ANNIVERSARY COUNTDOWN ====================
+function updateCountdown() {
+  var now = new Date();
+  var nextAnniversary = new Date(now.getFullYear(), 9, 21); // Oct 21 (month is 0-indexed)
+  if (nextAnniversary <= now) {
+    nextAnniversary = new Date(now.getFullYear() + 1, 9, 21);
+  }
+  var yearsCompleted = nextAnniversary.getFullYear() - 2025;
+  document.getElementById('nextAnniversaryYears').textContent = yearsCompleted;
+
+  var diffMs = nextAnniversary - now;
+  var days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  var secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+  document.getElementById('cd-days').textContent = days;
+  document.getElementById('cd-hours').textContent = String(hours).padStart ? String(hours).padStart(2, '0') : ('0' + hours).slice(-2);
+  document.getElementById('cd-mins').textContent = String(mins).padStart ? String(mins).padStart(2, '0') : ('0' + mins).slice(-2);
+  document.getElementById('cd-secs').textContent = String(secs).padStart ? String(secs).padStart(2, '0') : ('0' + secs).slice(-2);
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ==================== MESSAGES (localStorage) ====================
+function loadMessages() {
+  try {
+    var raw = localStorage.getItem('love_messages');
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function saveMessages(msgs) {
+  try { localStorage.setItem('love_messages', JSON.stringify(msgs)); } catch(e) {}
+}
+
+function renderMessages() {
+  var msgs = loadMessages();
+  var list = document.getElementById('messagesList');
+  if (msgs.length === 0) {
+    list.innerHTML = '<div class="empty-msgs">还没有留言，来做第一个留言的人吧 💕</div>';
+  } else {
+    var html = '';
+    for (var i = msgs.length - 1; i >= 0; i--) {
+      var m = msgs[i];
+      html += '<div class="msg-bubble">' +
+        '<div class="msg-author">' + escapeHtml(m.author) + '</div>' +
+        '<div class="msg-text">' + escapeHtml(m.text) + '</div>' +
+        '<div class="msg-time">' + m.time + '</div>' +
+        '<button class="msg-del" onclick="deleteMessage(' + i + ')" title="删除">✕</button>' +
+      '</div>';
+    }
+    list.innerHTML = html;
+  }
+}
+
+function addMessage() {
+  var author = document.getElementById('msgAuthor').value.trim();
+  var text = document.getElementById('msgText').value.trim();
+  if (!author) { alert('请留下你的名字哦~'); return; }
+  if (!text) { alert('想说点什么呢~'); return; }
+  var msgs = loadMessages();
+  msgs.push({ author: author, text: text, time: new Date().toLocaleString('zh-CN') });
+  saveMessages(msgs);
+  renderMessages();
+  document.getElementById('msgAuthor').value = '';
+  document.getElementById('msgText').value = '';
+}
+
+function deleteMessage(index) {
+  var msgs = loadMessages();
+  msgs.splice(index, 1);
+  saveMessages(msgs);
+  renderMessages();
+}
+
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+renderMessages();
+
+// ==================== LIGHTBOX ====================
+function openLightbox(src, caption) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// ==================== GALLERY ====================
+function initGallery() {
+  var grid = document.getElementById('galleryGrid');
+  var items = [];
+  for (var i = 1; i <= 8; i++) {
+    items.push({ src: 'photos/0' + i + '.jpg', caption: '我们的甜蜜时刻 ' + i });
+  }
+  var html = '';
+  for (var j = 0; j < items.length; j++) {
+    html += '<div class="gallery-item" onclick="openLightbox(\'' + items[j].src + '\', \'' + items[j].caption + '\')">' +
+      '<img src="' + items[j].src + '" alt="' + items[j].caption + '" ' +
+      'onerror="this.parentElement.classList.add(\'placeholder\');this.style.display=\'none\';" ' +
+      'loading="lazy">' +
+      '<div class="overlay">' + items[j].caption + '</div>' +
+    '</div>';
+  }
+  grid.innerHTML = html;
+}
+initGallery();
+
+// ==================== LOVE QUOTES ====================
+var quotes = [
+  { text: '山有木兮木有枝，心悦君兮君不知。', author: '《越人歌》' },
+  { text: '愿得一人心，白首不相离。', author: '卓文君' },
+  { text: '死生契阔，与子成说。执子之手，与子偕老。', author: '《诗经》' },
+  { text: '在天愿作比翼鸟，在地愿为连理枝。', author: '白居易' },
+  { text: '衣带渐宽终不悔，为伊消得人憔悴。', author: '柳永' },
+  { text: '两情若是久长时，又岂在朝朝暮暮。', author: '秦观' },
+  { text: '曾经沧海难为水，除却巫山不是云。', author: '元稹' },
+  { text: '身无彩凤双飞翼，心有灵犀一点通。', author: '李商隐' },
+  { text: '此生遇见你，是我最大的幸运。', author: '李琦' }
+];
+
+var quoteIndex = 0;
+function rotateQuote() {
+  var q = quotes[quoteIndex % quotes.length];
+  var box = document.getElementById('quoteBox');
+  box.style.opacity = '0';
+  setTimeout(function() {
+    document.getElementById('quoteText').textContent = '"' + q.text + '"';
+    document.getElementById('quoteAuthor').textContent = '—— ' + q.author;
+    box.style.opacity = '1';
+  }, 500);
+  quoteIndex++;
+}
+rotateQuote();
+setInterval(rotateQuote, 8000);
+
+// ==================== SCROLL ANIMATION ====================
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.15 });
+
+var fadeEls = document.querySelectorAll('.fade-in');
+for (var k = 0; k < fadeEls.length; k++) {
+  observer.observe(fadeEls[k]);
+}
+
+// ==================== BACKGROUND MUSIC ====================
+var musicPlaying = false;
+var audioCtx = null;
+var musicInterval = null;
+var melody = [
+  523, 587, 659, 698, 784, 880, 988, 1047,
+  1047, 988, 880, 784, 698, 659, 587, 523,
+  659, 698, 784, 880, 988, 880, 784, 698,
+  784, 880, 988, 1047, 1175, 1319, 1175, 1047
+];
+var noteIndex = 0;
+
+function playNote() {
+  if (!audioCtx || !musicPlaying) return;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.value = melody[noteIndex % melody.length];
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime + 0.6);
+  noteIndex++;
+}
+
+function toggleMusic() {
+  var btn = document.getElementById('musicBtn');
+  if (!musicPlaying) {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    musicPlaying = true;
+    btn.classList.add('playing');
+    btn.textContent = '🎶';
+    btn.title = '暂停音乐';
+    musicInterval = setInterval(playNote, 700);
+  } else {
+    musicPlaying = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🎵';
+    btn.title = '播放音乐';
+    clearInterval(musicInterval);
+  }
+}
+
+// ==================== TODAY'S DATE ====================
+var now = new Date();
+document.getElementById('todayTag').textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+</script>
+</body>
+</html>
