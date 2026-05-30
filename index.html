@@ -538,15 +538,13 @@ function githubGet(path) {
   });
 }
 
-function githubPut(path, content, message) {
+function githubPut(path, content, message, retries) {
+  retries = retries || 0;
+  if (retries >= 3) return Promise.reject(new Error('重试次数过多'));
   var jsonStr = JSON.stringify(content, null, 2);
-  var body = {
-    message: message,
-    content: strToBase64(jsonStr),
-    branch: DATA_BRANCH
-  };
-  return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH, {
-    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  var body = { message: message, content: strToBase64(jsonStr), branch: DATA_BRANCH };
+  return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
+    cache: 'no-store', headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (r.ok) return r.json();
     if (r.status === 404) return null;
@@ -559,15 +557,22 @@ function githubPut(path, content, message) {
       body: JSON.stringify(body)
     });
   }).then(function(r) {
-    if (!r.ok) throw new Error('PUT ' + r.status);
-    return r.json();
+    if (r.ok) return r.json();
+    // 409 Conflict or 422 Unprocessable — sha mismatch, retry
+    if (r.status === 409 || r.status === 422) {
+      return new Promise(function(resolve) { setTimeout(resolve, 400 + Math.random() * 600); })
+        .then(function() { return githubPut(path, content, message, retries + 1); });
+    }
+    throw new Error('PUT ' + r.status);
   });
 }
 
-function githubUploadFile(filePath, base64Data, message) {
+function githubUploadFile(filePath, base64Data, message, retries) {
+  retries = retries || 0;
+  if (retries >= 3) return Promise.reject(new Error('重试次数过多'));
   var body = { message: message, content: base64Data, branch: DATA_BRANCH };
-  return fetch(GITHUB_API + filePath + '?ref=' + DATA_BRANCH, {
-    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  return fetch(GITHUB_API + filePath + '?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
+    cache: 'no-store', headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (r.ok) return r.json();
     if (r.status === 404) return null;
@@ -580,8 +585,12 @@ function githubUploadFile(filePath, base64Data, message) {
       body: JSON.stringify(body)
     });
   }).then(function(r) {
-    if (!r.ok) throw new Error('Upload ' + r.status);
-    return r.json();
+    if (r.ok) return r.json();
+    if (r.status === 409 || r.status === 422) {
+      return new Promise(function(resolve) { setTimeout(resolve, 400 + Math.random() * 600); })
+        .then(function() { return githubUploadFile(filePath, base64Data, message, retries + 1); });
+    }
+    throw new Error('Upload ' + r.status);
   });
 }
 
@@ -638,6 +647,22 @@ var START_DATE = new Date('2025-10-21');
   update(); setInterval(update, 1000);
 })();
 
+// ==================== SAVE QUEUE ====================
+var msgSaveQueue = Promise.resolve();
+var photoSaveQueue = Promise.resolve();
+var videoSaveQueue = Promise.resolve();
+var musicSaveQueue = Promise.resolve();
+
+function enqueueSave(type, fn) {
+  var q = type === 'msg' ? msgSaveQueue : type === 'photo' ? photoSaveQueue : type === 'video' ? videoSaveQueue : musicSaveQueue;
+  var next = q.then(fn, fn);
+  if (type === 'msg') msgSaveQueue = next;
+  else if (type === 'photo') photoSaveQueue = next;
+  else if (type === 'video') videoSaveQueue = next;
+  else musicSaveQueue = next;
+  return next;
+}
+
 // ==================== MESSAGES (GitHub) ====================
 var messagesCache = [];
 
@@ -653,7 +678,9 @@ function loadMessages() {
 }
 
 function saveMessages() {
-  return githubPut('messages.json', messagesCache, 'Update messages');
+  return enqueueSave('msg', function() {
+    return githubPut('messages.json', messagesCache.slice(), 'Update messages');
+  });
 }
 
 function renderMessages() {
@@ -722,7 +749,9 @@ function loadPhotos() {
 }
 
 function savePhotos() {
-  return githubPut('photos.json', photosCache, 'Update photos');
+  return enqueueSave('photo', function() {
+    return githubPut('photos.json', photosCache.slice(), 'Update photos');
+  });
 }
 
 function renderGallery() {
@@ -860,7 +889,9 @@ function loadVideos() {
 }
 
 function saveVideos() {
-  return githubPut('videos.json', videosCache, 'Update videos');
+  return enqueueSave('video', function() {
+    return githubPut('videos.json', videosCache.slice(), 'Update videos');
+  });
 }
 
 function renderVideos() {
