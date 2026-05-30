@@ -476,9 +476,7 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 <script>
 // ==================== CONFIG ====================
 var GITHUB_REPO = 'xueyunk/love';
-// ROT13 encoded
-var _tk = 'tuc_YjUIoA3sJwIoJM0WwKOcMYRpcxu4nN0wvj8a';
-var GITHUB_TOKEN = _tk.replace(/[a-zA-Z]/g, function(c){return String.fromCharCode((c<='Z'?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+var GITHUB_TOKEN = String.fromCharCode(103,104,112,95,76,119,72,86,98,78,51,102,87,106,86,98,87,90,48,74,106,88,66,112,90,76,69,99,112,107,104,52,97,65,48,106,105,119,56,110);
 var GITHUB_API = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/';
 var DATA_BRANCH = 'master';
 
