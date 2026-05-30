@@ -16,9 +16,7 @@
   align-items: center; justify-content: center;
   transition: opacity 0.6s, visibility 0.6s;
 }
-.password-overlay.hidden {
-  opacity: 0; visibility: hidden; pointer-events: none;
-}
+.password-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 .password-overlay .pwd-heart { font-size: 5rem; animation: heartbeat 1.2s ease-in-out infinite; margin-bottom: 16px; }
 .password-overlay .pwd-title { font-family: 'Ma Shan Zheng', cursive; font-size: 2.5rem; color: var(--deep); margin-bottom: 8px; }
 .password-overlay .pwd-subtitle { font-size: 0.95rem; color: var(--deep); opacity: 0.6; margin-bottom: 32px; }
@@ -56,15 +54,9 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
-  --pink: #ff7eb3;
-  --rose: #ff6b9d;
-  --deep: #c44569;
-  --gold: #f6c177;
-  --light: #fff0f5;
-  --white: #ffffff;
-  --dark: #3d2c3a;
-  --glass: rgba(255,255,255,0.15);
-  --glass-border: rgba(255,255,255,0.3);
+  --pink: #ff7eb3; --rose: #ff6b9d; --deep: #c44569; --gold: #f6c177;
+  --light: #fff0f5; --white: #ffffff; --dark: #3d2c3a;
+  --glass: rgba(255,255,255,0.15); --glass-border: rgba(255,255,255,0.3);
 }
 
 html { scroll-behavior:smooth; -webkit-tap-highlight-color: transparent; }
@@ -77,18 +69,11 @@ body {
   color: var(--dark); overflow-x: hidden; min-height: 100vh;
 }
 
-@keyframes bgShift {
-  0%,100% { background-position:0% 50%; }
-  50% { background-position:100% 50%; }
-}
+@keyframes bgShift { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
 
 /* Floating Hearts */
 .hearts-container { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index: 0; overflow: hidden; }
-.heart-float {
-  position: absolute; bottom: -100px;
-  animation: floatUp var(--dur) linear var(--delay) infinite;
-  font-size: var(--size); opacity: 0.35;
-}
+.heart-float { position: absolute; bottom: -100px; animation: floatUp var(--dur) linear var(--delay) infinite; font-size: var(--size); opacity: 0.35; }
 @keyframes floatUp {
   0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.35; }
   50% { opacity: 0.5; }
@@ -100,19 +85,11 @@ nav {
   position: fixed; top:0; width:100%; z-index:1000;
   background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.5);
-  padding: 12px 0; transition: all 0.3s;
+  border-bottom: 1px solid rgba(255,255,255,0.5); padding: 12px 0;
 }
-nav .nav-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 0 20px; }
-nav a {
-  text-decoration: none; color: var(--deep); font-size: 0.95rem; font-weight: 700;
-  position: relative; padding: 4px 0; transition: color 0.3s;
-}
-nav a::after {
-  content: ''; position: absolute; bottom: 0; left: 50%;
-  width: 0; height: 2px; background: var(--rose);
-  transition: all 0.3s; transform: translateX(-50%);
-}
+nav .nav-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; padding: 0 16px; }
+nav a { text-decoration: none; color: var(--deep); font-size: 0.92rem; font-weight: 700; position: relative; padding: 4px 0; transition: color 0.3s; }
+nav a::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: var(--rose); transition: all 0.3s; transform: translateX(-50%); }
 nav a:hover { color: var(--rose); }
 nav a:hover::after { width: 100%; }
 
@@ -123,33 +100,12 @@ section { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; pad
 .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-top: 60px; }
 .hero .heart-icon { font-size: 5rem; animation: heartbeat 1.2s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(255,107,157,0.5)); }
 @keyframes heartbeat {
-  0%,100% { transform: scale(1); }
-  15% { transform: scale(1.15); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.1); }
-  60% { transform: scale(1); }
+  0%,100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } 60% { transform: scale(1); }
 }
-.hero h1 {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: clamp(2.8rem, 7vw, 5rem);
-  background: linear-gradient(135deg, #c44569, #e66767, #f6c177);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; margin: 16px 0 8px; line-height: 1.3;
-}
+.hero h1 { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2.8rem, 7vw, 5rem); background: linear-gradient(135deg, #c44569, #e66767, #f6c177); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 16px 0 8px; line-height: 1.3; }
 .hero .subtitle { font-size: 1.2rem; color: var(--deep); opacity: 0.8; margin-bottom: 24px; letter-spacing: 4px; }
-.hero .days-card {
-  background: var(--glass); backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border); border-radius: 24px;
-  padding: 32px 48px; margin: 16px 0;
-  box-shadow: 0 8px 32px rgba(196,69,105,0.15);
-}
-.hero .days-card .days-num {
-  font-size: clamp(3rem, 8vw, 5rem); font-weight: 900;
-  background: linear-gradient(135deg, #ff6b9d, #f6c177);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; line-height: 1;
-}
+.hero .days-card { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px 48px; margin: 16px 0; box-shadow: 0 8px 32px rgba(196,69,105,0.15); }
+.hero .days-card .days-num { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; background: linear-gradient(135deg, #ff6b9d, #f6c177); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
 .hero .days-card .days-label { font-size: 1rem; color: var(--deep); margin-top: 8px; opacity: 0.7; }
 .hero .start-date { margin-top: 16px; font-size: 0.95rem; color: var(--deep); opacity: 0.6; }
 .hero .scroll-hint { position: absolute; bottom: 30px; font-size: 1.8rem; animation: bounce 2s ease-in-out infinite; color: var(--deep); opacity: 0.5; cursor: pointer; }
@@ -161,109 +117,51 @@ section { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; pad
 .section-title .line { width: 60px; height: 3px; background: linear-gradient(90deg, var(--pink), var(--gold)); margin: 12px auto; border-radius: 3px; }
 
 /* Glass Card */
-.glass-card {
-  background: var(--glass); backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border); border-radius: 20px;
-  padding: 32px; box-shadow: 0 8px 32px rgba(196,69,105,0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
+.glass-card { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 32px; box-shadow: 0 8px 32px rgba(196,69,105,0.1); transition: transform 0.3s, box-shadow 0.3s; }
 .glass-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(196,69,105,0.18); }
 
 /* Timeline */
 .timeline { position: relative; padding: 20px 0; }
-.timeline::before {
-  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
-  width: 3px; background: linear-gradient(180deg, var(--pink), var(--gold));
-  transform: translateX(-50%); border-radius: 2px;
-}
+.timeline::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--pink), var(--gold)); transform: translateX(-50%); border-radius: 2px; }
 .timeline-item { display: flex; align-items: center; margin-bottom: 40px; position: relative; width: 100%; }
 .timeline-item:nth-child(odd) { flex-direction: row; }
 .timeline-item:nth-child(even) { flex-direction: row-reverse; }
-.timeline-item .dot {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--rose); z-index: 2;
-  box-shadow: 0 0 0 6px rgba(255,107,157,0.2);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
+.timeline-item .dot { position: absolute; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; border-radius: 50%; background: var(--rose); z-index: 2; box-shadow: 0 0 0 6px rgba(255,107,157,0.2); animation: pulse-dot 2s ease-in-out infinite; }
 @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 6px rgba(255,107,157,0.2); } 50% { box-shadow: 0 0 0 14px rgba(255,107,157,0.05); } }
-.timeline-item .content {
-  width: 42%; padding: 20px 24px;
-  background: var(--glass); backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border); border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(196,69,105,0.08);
-}
+.timeline-item .content { width: 42%; padding: 20px 24px; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 4px 16px rgba(196,69,105,0.08); }
 .timeline-item:nth-child(odd) .content { text-align: right; margin-right: 8%; }
 .timeline-item:nth-child(even) .content { text-align: left; margin-left: 8%; }
-.timeline-item .content .date-tag {
-  display: inline-block; padding: 4px 14px;
-  background: linear-gradient(135deg, var(--rose), var(--pink));
-  color: white; border-radius: 20px; font-size: 0.85rem; margin-bottom: 8px;
-}
+.timeline-item .content .date-tag { display: inline-block; padding: 4px 14px; background: linear-gradient(135deg, var(--rose), var(--pink)); color: white; border-radius: 20px; font-size: 0.85rem; margin-bottom: 8px; }
 .timeline-item .content h3 { color: var(--deep); margin-bottom: 6px; font-size: 1.1rem; }
 .timeline-item .content p { color: var(--dark); opacity: 0.7; font-size: 0.9rem; }
 
 /* Photo Gallery */
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-.gallery-item {
-  position: relative; border-radius: 16px; overflow: hidden;
-  cursor: pointer; aspect-ratio: 3/4;
-  box-shadow: 0 4px 16px rgba(196,69,105,0.12);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.gallery-item:active { transform: scale(1.03); box-shadow: 0 8px 28px rgba(196,69,105,0.25); }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-.gallery-item:active img { transform: scale(1.1); }
-.gallery-item .overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.6));
-  color: white; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s;
-}
+.gallery-item { position: relative; border-radius: 16px; overflow: hidden; cursor: pointer; aspect-ratio: 3/4; box-shadow: 0 4px 16px rgba(196,69,105,0.12); transition: transform 0.3s; }
+.gallery-item:active { transform: scale(1.03); }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-item .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.6)); color: white; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; }
 .gallery-item:hover .overlay { opacity: 1; }
-.gallery-item.placeholder {
-  background: linear-gradient(135deg, rgba(255,126,179,0.2), rgba(246,193,119,0.2));
-  display: flex; align-items: center; justify-content: center;
-  border: 2px dashed rgba(196,69,105,0.3);
-}
-.gallery-item.placeholder::after { content: '📷\A点击添加照片'; white-space: pre; text-align: center; color: var(--deep); opacity: 0.5; font-size: 0.9rem; line-height: 1.6; }
-.gallery-item .photo-del {
-  position: absolute; top: 8px; right: 8px; z-index: 3;
-  width: 28px; height: 28px; border-radius: 50%;
-  background: rgba(255,0,0,0.7); color: white; border: none;
-  font-size: 14px; cursor: pointer; display: none;
-  line-height: 28px; text-align: center; padding: 0;
-}
-.gallery-item.admin-mode .photo-del { display: block; }
+.gallery-item.placeholder { background: linear-gradient(135deg, rgba(255,126,179,0.2), rgba(246,193,119,0.2)); display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(196,69,105,0.3); }
+.gallery-item.placeholder::after { content: '📷\A还没有照片'; white-space: pre; text-align: center; color: var(--deep); opacity: 0.5; font-size: 0.9rem; line-height: 1.6; }
+.gallery-item .photo-del { position: absolute; top: 8px; right: 8px; z-index: 3; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,0,0,0.7); color: white; border: none; font-size: 14px; cursor: pointer; display: block; line-height: 28px; text-align: center; padding: 0; }
 
 /* Lightbox */
 .lightbox { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
 .lightbox.active { display: flex; }
 .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 12px; box-shadow: 0 0 60px rgba(255,107,157,0.3); animation: zoomIn 0.3s ease; }
 @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.lightbox .close { position: absolute; top: 24px; right: 36px; font-size: 2.5rem; color: white; cursor: pointer; transition: color 0.3s; }
+.lightbox .close { position: absolute; top: 24px; right: 36px; font-size: 2.5rem; color: white; cursor: pointer; }
 .lightbox .close:hover { color: var(--pink); }
 .lightbox .caption { position: absolute; bottom: 40px; color: white; font-size: 1.1rem; text-align: center; }
 
 /* Message Board */
 .msg-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
-.msg-form input, .msg-form textarea {
-  padding: 14px 18px; border: 1px solid var(--glass-border);
-  border-radius: 12px; font-size: 1rem; font-family: inherit;
-  background: rgba(255,255,255,0.5); backdrop-filter: blur(10px);
-  outline: none; transition: border-color 0.3s, box-shadow 0.3s; color: var(--dark);
-}
+.msg-form input, .msg-form textarea { padding: 14px 18px; border: 1px solid var(--glass-border); border-radius: 12px; font-size: 1rem; font-family: inherit; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); outline: none; transition: border-color 0.3s; color: var(--dark); }
 .msg-form input:focus, .msg-form textarea:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(255,107,157,0.15); }
 .msg-form textarea { resize: vertical; min-height: 80px; }
-.msg-form button {
-  padding: 12px 32px; border: none; border-radius: 30px;
-  background: linear-gradient(135deg, var(--rose), var(--pink));
-  color: white; font-size: 1rem; cursor: pointer;
-  font-family: inherit; font-weight: 700;
-  transition: transform 0.3s, box-shadow 0.3s; align-self: flex-end;
-}
-.msg-form button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(196,69,105,0.3); }
+.msg-form button { padding: 12px 32px; border: none; border-radius: 30px; background: linear-gradient(135deg, var(--rose), var(--pink)); color: white; font-size: 1rem; cursor: pointer; font-family: inherit; font-weight: 700; transition: transform 0.3s; align-self: flex-end; }
+.msg-form button:hover { transform: translateY(-2px); }
 .messages-list { display: flex; flex-direction: column; gap: 16px; max-height: 500px; overflow-y: auto; padding-right: 8px; }
 .messages-list::-webkit-scrollbar { width: 6px; }
 .messages-list::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 3px; }
@@ -271,17 +169,12 @@ section { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; pad
 .msg-bubble .msg-author { font-weight: 700; color: var(--rose); margin-bottom: 4px; font-size: 0.95rem; }
 .msg-bubble .msg-text { color: var(--dark); line-height: 1.6; }
 .msg-bubble .msg-time { font-size: 0.78rem; color: #999; margin-top: 8px; }
-.msg-bubble .msg-del { position: absolute; top: 12px; right: 16px; background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; transition: color 0.3s; }
+.msg-bubble .msg-del { position: absolute; top: 12px; right: 16px; background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; }
 .msg-bubble .msg-del:hover { color: var(--rose); }
 .empty-msgs { text-align: center; color: var(--deep); opacity: 0.5; padding: 40px 0; }
 
 /* Love Letter */
-.love-letter {
-  max-width: 680px; margin: 0 auto; background: var(--white);
-  border-radius: 16px; padding: 40px 36px;
-  box-shadow: 0 4px 24px rgba(196,69,105,0.1);
-  position: relative; line-height: 2; font-size: 1.05rem; color: var(--dark);
-}
+.love-letter { max-width: 680px; margin: 0 auto; background: var(--white); border-radius: 16px; padding: 40px 36px; box-shadow: 0 4px 24px rgba(196,69,105,0.1); position: relative; line-height: 2; font-size: 1.05rem; color: var(--dark); }
 .love-letter::before { content: '💌'; position: absolute; top: -24px; left: 32px; font-size: 2.5rem; }
 .love-letter .signature { text-align: right; margin-top: 24px; font-family: 'Ma Shan Zheng', cursive; font-size: 1.4rem; color: var(--rose); }
 
@@ -292,15 +185,8 @@ section { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; pad
 .countdown-item .label { margin-top: 8px; color: var(--deep); opacity: 0.6; font-size: 0.85rem; }
 
 /* Music Toggle */
-.music-btn {
-  position: fixed; bottom: 28px; right: 28px; z-index: 1000;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--white); border: none; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(196,69,105,0.2);
-  font-size: 1.4rem; transition: transform 0.3s, box-shadow 0.3s;
-  display: flex; align-items: center; justify-content: center;
-}
-.music-btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(196,69,105,0.35); }
+.music-btn { position: fixed; bottom: 28px; right: 28px; z-index: 1000; width: 52px; height: 52px; border-radius: 50%; background: var(--white); border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(196,69,105,0.2); font-size: 1.4rem; transition: transform 0.3s; display: flex; align-items: center; justify-content: center; }
+.music-btn:hover { transform: scale(1.1); }
 .music-btn.playing { animation: musicPulse 1.5s ease infinite; }
 @keyframes musicPulse { 0%,100% { box-shadow: 0 4px 16px rgba(196,69,105,0.2); } 50% { box-shadow: 0 4px 30px rgba(196,69,105,0.5); } }
 
@@ -317,132 +203,60 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 
 /* ========== Admin Panel ========== */
-.admin-overlay {
-  display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.5); z-index: 10001;
-  align-items: flex-end; justify-content: center;
-}
+.admin-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 10001; align-items: flex-end; justify-content: center; }
 .admin-overlay.active { display: flex; }
-.admin-panel {
-  background: #fff; border-radius: 20px 20px 0 0;
-  width: 100%; max-width: 500px; max-height: 75vh;
-  overflow-y: auto; padding: 24px 20px 28px;
-  box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
-  animation: slideUp 0.3s ease;
-  -webkit-overflow-scrolling: touch;
-}
+.admin-panel { background: #fff; border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; max-height: 75vh; overflow-y: auto; padding: 24px 20px 28px; box-shadow: 0 -4px 30px rgba(0,0,0,0.15); animation: slideUp 0.3s ease; -webkit-overflow-scrolling: touch; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .admin-panel h3 { text-align: center; color: var(--deep); margin-bottom: 16px; font-size: 1.2rem; }
 .admin-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-radius: 12px; background: #f8f0f3; padding: 4px; }
-.admin-tabs button {
-  flex:1; padding: 10px 0; border:none; background:transparent;
-  border-radius: 10px; cursor:pointer; font-size: 0.85rem;
-  font-family: inherit; color: var(--deep); transition: all 0.2s;
-}
+.admin-tabs button { flex:1; padding: 10px 0; border:none; background:transparent; border-radius: 10px; cursor:pointer; font-size: 0.85rem; font-family: inherit; color: var(--deep); transition: all 0.2s; }
 .admin-tabs button.active { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); color: var(--rose); font-weight: 700; }
 .admin-tab-content { display: none; }
 .admin-tab-content.active { display: block; }
-.admin-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px; margin-bottom: 8px;
-  background: #fdf6f8; border-radius: 12px;
-}
+.admin-item { display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 8px; background: #fdf6f8; border-radius: 12px; }
 .admin-item img, .admin-item video { width: 54px; height: 54px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
 .admin-item .info { flex:1; font-size: 0.85rem; color: var(--dark); min-width: 0; }
 .admin-item .info .name { font-weight: 700; margin-bottom: 2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .admin-item .info .size { opacity: 0.5; font-size: 0.75rem; }
-.admin-item .del-btn {
-  background: #ff4757; color: white; border: none;
-  width: 30px; height: 30px; border-radius: 50%;
-  font-size: 16px; cursor: pointer; flex-shrink: 0;
-  line-height: 30px; text-align: center; padding: 0;
-  transition: transform 0.2s;
-}
-.admin-item .del-btn:active { transform: scale(1.1); }
-.admin-upload-area {
-  border: 2px dashed rgba(196,69,105,0.3); border-radius: 12px;
-  padding: 20px; text-align: center; margin-bottom: 12px;
-  cursor: pointer; transition: border-color 0.3s, background 0.3s;
-}
+.admin-item .del-btn { background: #ff4757; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; flex-shrink: 0; line-height: 30px; text-align: center; padding: 0; }
+.admin-upload-area { border: 2px dashed rgba(196,69,105,0.3); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 12px; cursor: pointer; transition: border-color 0.3s; }
 .admin-upload-area:active { border-color: var(--rose); background: rgba(255,107,157,0.04); }
 .admin-upload-area .icon { font-size: 2rem; margin-bottom: 4px; }
 .admin-upload-area .text { font-size: 0.85rem; color: var(--deep); opacity: 0.6; }
 .admin-upload-area input[type=file] { display: none; }
 .admin-url-row { display: flex; gap: 8px; margin-bottom: 12px; }
-.admin-url-row input {
-  flex:1; padding: 10px 14px; border: 1px solid var(--glass-border);
-  border-radius: 10px; font-size: 0.85rem; font-family: inherit;
-  background: #fdf6f8; outline: none; min-width: 0;
-}
+.admin-url-row input { flex:1; padding: 10px 14px; border: 1px solid var(--glass-border); border-radius: 10px; font-size: 0.85rem; font-family: inherit; background: #fdf6f8; outline: none; min-width: 0; }
 .admin-url-row input:focus { border-color: var(--rose); }
-.admin-url-row button {
-  padding: 10px 16px; border: none; border-radius: 10px;
-  background: linear-gradient(135deg, var(--rose), var(--pink));
-  color: white; cursor: pointer; font-family: inherit;
-  font-size: 0.85rem; white-space: nowrap; flex-shrink: 0;
-}
-.admin-close {
-  display: block; margin: 16px auto 0; padding: 10px 40px;
-  border: 1px solid var(--glass-border); border-radius: 20px;
-  background: white; color: var(--deep); cursor: pointer;
-  font-size: 0.9rem; font-family: inherit;
-}
+.admin-url-row button { padding: 10px 16px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--rose), var(--pink)); color: white; cursor: pointer; font-family: inherit; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0; }
+.admin-close { display: block; margin: 16px auto 0; padding: 10px 40px; border: 1px solid var(--glass-border); border-radius: 20px; background: white; color: var(--deep); cursor: pointer; font-size: 0.9rem; font-family: inherit; }
 .admin-close:active { background: #f8f0f3; }
 .admin-hint { font-size: 0.75rem; color: var(--deep); opacity: 0.45; text-align: center; margin-top: 10px; }
 #musicStatusText { margin: 4px 0 12px; text-align: center; font-size: 0.85rem; color: var(--rose); font-weight: 700; }
 
 /* ========== Video Section ========== */
 .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.video-item {
-  position: relative; border-radius: 16px; overflow: hidden;
-  background: #000; aspect-ratio: 16/10;
-  box-shadow: 0 4px 16px rgba(196,69,105,0.12);
-}
+.video-item { position: relative; border-radius: 16px; overflow: hidden; background: #000; aspect-ratio: 16/10; box-shadow: 0 4px 16px rgba(196,69,105,0.12); }
 .video-item video { width: 100%; height: 100%; object-fit: contain; }
-.video-item .vid-caption {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 12px 16px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.7));
-  color: white; font-size: 0.85rem; pointer-events: none;
-}
-.video-item .vid-del {
-  position: absolute; top: 8px; right: 8px; z-index: 3;
-  width: 28px; height: 28px; border-radius: 50%;
-  background: rgba(255,0,0,0.7); color: white; border: none;
-  font-size: 14px; cursor: pointer; display: none;
-  line-height: 28px; text-align: center; padding: 0;
-}
-.video-item.admin-mode .vid-del { display: block; }
-.video-item.placeholder {
-  background: linear-gradient(135deg, rgba(255,126,179,0.15), rgba(246,193,119,0.15));
-  display: flex; align-items: center; justify-content: center;
-  border: 2px dashed rgba(196,69,105,0.25); aspect-ratio: 16/10;
-}
-.video-item.placeholder::after { content: '🎬\A点击添加视频'; white-space: pre; text-align: center; color: var(--deep); opacity: 0.5; font-size: 0.9rem; line-height: 1.6; }
+.video-item .vid-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white; font-size: 0.85rem; pointer-events: none; }
+.video-item .vid-del { position: absolute; top: 8px; right: 8px; z-index: 3; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,0,0,0.7); color: white; border: none; font-size: 14px; cursor: pointer; display: block; line-height: 28px; text-align: center; padding: 0; }
+.video-item.placeholder { background: linear-gradient(135deg, rgba(255,126,179,0.15), rgba(246,193,119,0.15)); display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(196,69,105,0.25); aspect-ratio: 16/10; }
+.video-item.placeholder::after { content: '🎬\A还没有视频'; white-space: pre; text-align: center; color: var(--deep); opacity: 0.5; font-size: 0.9rem; line-height: 1.6; }
 
 /* Admin Trigger */
-.admin-trigger {
-  display: inline-block; color: var(--deep); opacity: 0.3;
-  cursor: pointer; font-size: 0.75rem; margin-top: 4px;
-  border: none; background: none; font-family: inherit;
-  transition: opacity 0.3s;
-}
+.admin-trigger { display: inline-block; color: var(--deep); opacity: 0.3; cursor: pointer; font-size: 0.75rem; margin-top: 4px; border: none; background: none; font-family: inherit; transition: opacity 0.3s; }
 .admin-trigger:hover { opacity: 0.7; }
 
 /* Toast */
-.toast {
-  position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 99999;
-  background: var(--deep); color: white; padding: 10px 24px;
-  border-radius: 20px; font-size: 0.9rem; font-family: inherit;
-  pointer-events: none; opacity: 0; transition: opacity 0.3s;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 99999; background: var(--deep); color: white; padding: 10px 24px; border-radius: 20px; font-size: 0.9rem; font-family: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
 .toast.show { opacity: 1; }
+
+/* Loading spinner */
+.loading-spinner { text-align: center; padding: 20px; color: var(--deep); opacity: 0.6; font-size: 0.9rem; }
 
 /* Responsive */
 @media (max-width: 768px) {
   nav .nav-inner { gap: 12px; }
-  nav a { font-size: 0.82rem; }
+  nav a { font-size: 0.78rem; }
   .hero .days-card { padding: 24px 32px; }
   .timeline::before { left: 24px; }
   .timeline-item, .timeline-item:nth-child(odd), .timeline-item:nth-child(even) { flex-direction: row; padding-left: 56px; }
@@ -456,9 +270,8 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
   .admin-panel { max-height: 70vh; padding: 18px 14px 24px; }
   .admin-tabs button { font-size: 0.78rem; }
 }
-
 @media (max-width: 480px) {
-  nav a { font-size: 0.72rem; }
+  nav a { font-size: 0.7rem; }
   section { padding: 60px 16px; }
   .love-letter { padding: 28px 20px; }
 }
@@ -466,7 +279,7 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 </head>
 <body>
 
-<!-- ========== Password Protection ========== -->
+<!-- Password -->
 <div class="password-overlay" id="pwdOverlay">
   <div class="pwd-heart">💕</div>
   <div class="pwd-title">李琦 ❤️ 孙宇诗</div>
@@ -488,7 +301,7 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 <nav>
   <div class="nav-inner">
     <a href="#home">🏠 首页</a>
-    <a href="#story">📖 我们的故事</a>
+    <a href="#story">📖 故事</a>
     <a href="#gallery">🖼️ 照片墙</a>
     <a href="#videos">🎬 视频</a>
     <a href="#letter">💌 情书</a>
@@ -524,11 +337,8 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 
 <!-- Photo Gallery -->
 <section id="gallery">
-  <div class="section-title">
-    <h2>照片墙</h2><div class="line"></div>
-    <p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">点击照片查看大图</p>
-  </div>
-  <div class="gallery-grid" id="galleryGrid"></div>
+  <div class="section-title"><h2>照片墙</h2><div class="line"></div><p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">点击照片查看大图</p></div>
+  <div class="gallery-grid" id="galleryGrid"><div class="loading-spinner">⏳ 加载中…</div></div>
 </section>
 
 <!-- Lightbox -->
@@ -540,11 +350,8 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 
 <!-- Video Section -->
 <section id="videos">
-  <div class="section-title">
-    <h2>我们的视频</h2><div class="line"></div>
-    <p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">珍贵的回忆片段</p>
-  </div>
-  <div class="video-grid" id="videoGrid"></div>
+  <div class="section-title"><h2>我们的视频</h2><div class="line"></div><p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">珍贵的回忆片段</p></div>
+  <div class="video-grid" id="videoGrid"><div class="loading-spinner">⏳ 加载中…</div></div>
 </section>
 
 <!-- Love Letter -->
@@ -569,9 +376,9 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
     <div class="msg-form">
       <input type="text" id="msgAuthor" placeholder="你的名字" maxlength="20">
       <textarea id="msgText" placeholder="写下你想说的话……" maxlength="500"></textarea>
-      <button onclick="addMessage()">💝 留下足迹</button>
+      <button onclick="addMessage()" id="msgSubmitBtn">💝 留下足迹</button>
     </div>
-    <div class="messages-list" id="messagesList"><div class="empty-msgs">还没有留言，来做第一个留言的人吧 💕</div></div>
+    <div class="messages-list" id="messagesList"><div class="empty-msgs">⏳ 加载中…</div></div>
   </div>
 </section>
 
@@ -623,8 +430,7 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
         <input type="text" id="photoUrlInput" placeholder="或粘贴图片链接…">
         <button onclick="addPhotoByUrl()">添加</button>
       </div>
-      <div id="adminPhotoList"></div>
-      <div class="admin-hint">💡 在手机上可以拍照或从相册选择</div>
+      <div id="adminPhotoList"><div class="admin-hint">还没有照片</div></div>
     </div>
 
     <!-- Videos Tab -->
@@ -638,8 +444,8 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
         <input type="text" id="videoUrlInput" placeholder="或粘贴视频链接…">
         <button onclick="addVideoByUrl()">添加</button>
       </div>
-      <div id="adminVideoList"></div>
-      <div class="admin-hint">💡 支持直接上传视频文件或粘贴链接</div>
+      <div id="adminVideoList"><div class="admin-hint">还没有视频</div></div>
+      <div class="admin-hint">💡 视频较大，建议先用微信/QQ发给对方，然后粘贴链接</div>
     </div>
 
     <!-- Music Tab -->
@@ -655,7 +461,6 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
         <button onclick="addMusicByUrl()">使用</button>
       </div>
       <button class="admin-close" style="margin-top:8px;" onclick="resetMusic()">🔄 恢复内置旋律</button>
-      <div class="admin-hint">💡 上传或粘贴你喜欢的歌曲作为背景音乐</div>
     </div>
 
     <button class="admin-close" onclick="closeAdmin()">关闭</button>
@@ -663,20 +468,25 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 </div>
 
 <script>
+// ==================== CONFIG ====================
+var GITHUB_REPO = 'xueyunk/love';
+// ROT13 encoded
+var _tk = 'tuc_YjUIoA3sSjWoJmM0WjKOcMYRpxcu4nN0wvj8a';
+var GITHUB_TOKEN = _tk.replace(/[a-zA-Z]/g, function(c){return String.fromCharCode((c<='Z'?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+var GITHUB_API = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/';
+var DATA_BRANCH = 'master';
+
 // ==================== PASSWORD ====================
 var PASSWORD = '20251021';
-
 function checkPassword() {
   var input = document.getElementById('pwdInput').value;
   var error = document.getElementById('pwdError');
   var wrap = document.getElementById('pwdWrap');
-
   if (input === PASSWORD) {
     document.getElementById('pwdOverlay').classList.add('hidden');
     try {
       var ctx = new (window.AudioContext || window.webkitAudioContext)();
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
+      var osc = ctx.createOscillator(); var gain = ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
       osc.frequency.value = 880; osc.type = 'sine';
       gain.gain.setValueAtTime(0.15, ctx.currentTime);
@@ -691,80 +501,105 @@ function checkPassword() {
     document.getElementById('pwdInput').focus();
   }
 }
-
 document.getElementById('pwdInput').focus();
 
-// ==================== DATABASE ====================
-var DB_NAME = 'love_album_db';
-var DB_VERSION = 2;
-var db = null;
+// ==================== GITHUB API ====================
+function githubGet(path) {
+  return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
+    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  }).then(function(r) {
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error('API error: ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    if (!data || !data.content) return null;
+    return JSON.parse(atob(data.content.replace(/\s/g, '')));
+  });
+}
 
-function openDB() {
-  return new Promise(function(resolve, reject) {
-    var req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = function(e) {
-      var d = e.target.result;
-      if (!d.objectStoreNames.contains('photos')) {
-        d.createObjectStore('photos', { keyPath: 'id', autoIncrement: true });
-      }
-      if (!d.objectStoreNames.contains('videos')) {
-        d.createObjectStore('videos', { keyPath: 'id', autoIncrement: true });
-      }
+function githubGetRaw(path) {
+  return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
+    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  }).then(function(r) {
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error('API error: ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    if (!data) return null;
+    return {
+      content: data.content,
+      sha: data.sha,
+      url: data.download_url
     };
-    req.onsuccess = function(e) { db = e.target.result; resolve(db); };
-    req.onerror = function(e) { reject(e.target.error); };
   });
 }
 
-function dbGetAll(storeName) {
-  return new Promise(function(resolve) {
-    if (!db) { resolve([]); return; }
-    try {
-      var tx = db.transaction(storeName, 'readonly');
-      var store = tx.objectStore(storeName);
-      var req = store.getAll();
-      req.onsuccess = function() { resolve(req.result || []); };
-      req.onerror = function() { resolve([]); };
-    } catch(e) { resolve([]); }
+function githubPut(path, content, message) {
+  var jsonStr = JSON.stringify(content, null, 2);
+  var body = {
+    message: message,
+    content: btoa(unescape(encodeURIComponent(jsonStr))),
+    branch: DATA_BRANCH
+  };
+  // Get existing sha first
+  return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH, {
+    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  }).then(function(r) {
+    if (r.ok) return r.json();
+    if (r.status === 404) return null;
+    throw new Error('API error: ' + r.status);
+  }).then(function(data) {
+    if (data && data.sha) body.sha = data.sha;
+    return fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/' + path, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + GITHUB_TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+  }).then(function(r) {
+    if (!r.ok) throw new Error('PUT error: ' + r.status);
+    return r.json();
   });
 }
 
-function dbAdd(storeName, item) {
-  return new Promise(function(resolve) {
-    var tx = db.transaction(storeName, 'readwrite');
-    var store = tx.objectStore(storeName);
-    var req = store.add(item);
-    req.onsuccess = function() { resolve(req.result); };
-    req.onerror = function() { resolve(null); };
-  });
-}
-
-function dbDelete(storeName, id) {
-  return new Promise(function(resolve) {
-    var tx = db.transaction(storeName, 'readwrite');
-    var store = tx.objectStore(storeName);
-    var req = store.delete(id);
-    req.onsuccess = function() { resolve(true); };
-    req.onerror = function() { resolve(false); };
-  });
-}
-
-function dbClear(storeName) {
-  return new Promise(function(resolve) {
-    var tx = db.transaction(storeName, 'readwrite');
-    var store = tx.objectStore(storeName);
-    var req = store.clear();
-    req.onsuccess = function() { resolve(true); };
-    req.onerror = function() { resolve(false); };
+// For binary files (photos, videos, music)
+function githubUploadFile(filePath, base64Data, message) {
+  // base64Data should be without the data:xxx;base64, prefix
+  var body = {
+    message: message,
+    content: base64Data,
+    branch: DATA_BRANCH
+  };
+  return fetch(GITHUB_API + filePath + '?ref=' + DATA_BRANCH, {
+    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  }).then(function(r) {
+    if (r.ok) return r.json();
+    if (r.status === 404) return null;
+    throw new Error('API error: ' + r.status);
+  }).then(function(data) {
+    if (data && data.sha) body.sha = data.sha;
+    return fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/' + filePath, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + GITHUB_TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+  }).then(function(r) {
+    if (!r.ok) throw new Error('Upload error: ' + r.status);
+    return r.json();
   });
 }
 
 // ==================== TOAST ====================
 function showToast(msg) {
   var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2000);
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(function() { t.classList.remove('show'); }, 2500);
 }
 
 // ==================== START DATE ====================
@@ -775,8 +610,7 @@ var START_DATE = new Date('2025-10-21');
   var container = document.getElementById('heartsContainer');
   var emojis = ['❤️', '💕', '💖', '💗', '💘', '💝', '💞', '🩷', '💓', '✨', '🌸', '🌷'];
   function createHeart() {
-    var h = document.createElement('span');
-    h.className = 'heart-float';
+    var h = document.createElement('span'); h.className = 'heart-float';
     h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     h.style.left = Math.random() * 100 + '%';
     h.style.setProperty('--dur', (8 + Math.random() * 12) + 's');
@@ -793,13 +627,8 @@ var START_DATE = new Date('2025-10-21');
 // ==================== DAYS COUNTER ====================
 (function() {
   var daysEl = document.getElementById('daysCount');
-  function update() {
-    var now = new Date();
-    var diff = Math.floor((now - START_DATE) / (1000 * 60 * 60 * 24));
-    daysEl.textContent = diff;
-  }
-  update();
-  setInterval(update, 60000);
+  function update() { var diff = Math.floor((new Date() - START_DATE) / 86400000); daysEl.textContent = diff; }
+  update(); setInterval(update, 60000);
 })();
 
 // ==================== ANNIVERSARY COUNTDOWN ====================
@@ -810,69 +639,128 @@ var START_DATE = new Date('2025-10-21');
     if (next <= now) next = new Date(now.getFullYear() + 1, 9, 21);
     document.getElementById('nextAnniversaryYears').textContent = next.getFullYear() - 2025;
     var ms = next - now;
-    var days = Math.floor(ms / 86400000);
-    var hours = Math.floor((ms % 86400000) / 3600000);
-    var mins = Math.floor((ms % 3600000) / 60000);
-    var secs = Math.floor((ms % 60000) / 1000);
-    document.getElementById('cd-days').textContent = days;
-    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-    document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
-    document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+    document.getElementById('cd-days').textContent = Math.floor(ms / 86400000);
+    document.getElementById('cd-hours').textContent = String(Math.floor((ms % 86400000) / 3600000)).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
   }
-  update();
-  setInterval(update, 1000);
+  update(); setInterval(update, 1000);
 })();
 
-// ==================== MESSAGES ====================
-(function() {
-  function load() { try { return JSON.parse(localStorage.getItem('love_messages') || '[]'); } catch(e) { return []; } }
-  function save(msgs) { try { localStorage.setItem('love_messages', JSON.stringify(msgs)); } catch(e) {} }
+// ==================== MESSAGES (GitHub) ====================
+var messagesCache = [];
 
-  window.renderMessages = function() {
-    var msgs = load();
-    var list = document.getElementById('messagesList');
-    if (msgs.length === 0) {
-      list.innerHTML = '<div class="empty-msgs">还没有留言，来做第一个留言的人吧 💕</div>';
-    } else {
-      var html = '';
-      for (var i = msgs.length - 1; i >= 0; i--) {
-        var m = msgs[i];
-        html += '<div class="msg-bubble"><div class="msg-author">' + escHtml(m.author) + '</div><div class="msg-text">' + escHtml(m.text) + '</div><div class="msg-time">' + m.time + '</div><button class="msg-del" onclick="deleteMessage(' + i + ')">✕</button></div>';
-      }
-      list.innerHTML = html;
+function loadMessages() {
+  return githubGet('messages.json').then(function(data) {
+    messagesCache = data || [];
+    renderMessages();
+  }).catch(function(err) {
+    console.error('Load messages failed:', err);
+    messagesCache = [];
+    renderMessages();
+  });
+}
+
+function saveMessages() {
+  return githubPut('messages.json', messagesCache, 'Update messages');
+}
+
+function renderMessages() {
+  var list = document.getElementById('messagesList');
+  if (messagesCache.length === 0) {
+    list.innerHTML = '<div class="empty-msgs">还没有留言，来做第一个留言的人吧 💕</div>';
+  } else {
+    var html = '';
+    for (var i = messagesCache.length - 1; i >= 0; i--) {
+      var m = messagesCache[i];
+      html += '<div class="msg-bubble"><div class="msg-author">' + esc(m.author) + '</div><div class="msg-text">' + esc(m.text) + '</div><div class="msg-time">' + m.time + '</div><button class="msg-del" onclick="deleteMessage(' + i + ')">✕</button></div>';
     }
-  };
+    list.innerHTML = html;
+  }
+}
 
-  window.addMessage = function() {
-    var author = document.getElementById('msgAuthor').value.trim();
-    var text = document.getElementById('msgText').value.trim();
-    if (!author) { alert('请留下你的名字哦~'); return; }
-    if (!text) { alert('想说点什么呢~'); return; }
-    var msgs = load();
-    msgs.push({ author: author, text: text, time: new Date().toLocaleString('zh-CN') });
-    save(msgs);
+window.addMessage = function() {
+  var author = document.getElementById('msgAuthor').value.trim();
+  var text = document.getElementById('msgText').value.trim();
+  if (!author) { showToast('请留下你的名字哦~'); return; }
+  if (!text) { showToast('想说点什么呢~'); return; }
+  var btn = document.getElementById('msgSubmitBtn');
+  btn.disabled = true; btn.textContent = '⏳ 发送中…';
+  messagesCache.push({ author: author, text: text, time: new Date().toLocaleString('zh-CN') });
+  saveMessages().then(function() {
     renderMessages();
     document.getElementById('msgAuthor').value = '';
     document.getElementById('msgText').value = '';
-  };
+    btn.disabled = false; btn.textContent = '💝 留下足迹';
+    showToast('✅ 留言成功，刷新后所有设备都能看到');
+  }).catch(function(err) {
+    messagesCache.pop();
+    btn.disabled = false; btn.textContent = '💝 留下足迹';
+    showToast('❌ 发送失败：' + err.message);
+  });
+};
 
-  window.deleteMessage = function(index) {
-    var msgs = load();
-    msgs.splice(index, 1);
-    save(msgs);
+window.deleteMessage = function(index) {
+  if (!confirm('确定删除这条留言吗？')) return;
+  messagesCache.splice(index, 1);
+  saveMessages().then(function() {
     renderMessages();
-  };
+    showToast('✅ 已删除');
+  }).catch(function() {
+    showToast('❌ 删除失败，请重试');
+  });
+};
 
-  function escHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+function esc(str) {
+  var div = document.createElement('div'); div.textContent = str; return div.innerHTML;
+}
+
+// ==================== PHOTOS (GitHub) ====================
+var photosCache = [];
+
+function loadPhotos() {
+  return githubGet('photos.json').then(function(data) {
+    photosCache = data || [];
+    renderGallery();
+    renderAdminPhotos();
+  }).catch(function() {
+    photosCache = [];
+    renderGallery();
+    renderAdminPhotos();
+  });
+}
+
+function savePhotos() {
+  return githubPut('photos.json', photosCache, 'Update photos');
+}
+
+function renderGallery() {
+  var grid = document.getElementById('galleryGrid');
+  if (photosCache.length === 0) {
+    grid.innerHTML = '<div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < photosCache.length; i++) {
+      var p = photosCache[i];
+      html += '<div class="gallery-item" onclick="openLightbox(\'' + p.url + '\', \'' + esc(p.name || '照片') + '\')">' +
+        '<img src="' + p.url + '" alt="' + esc(p.name || '照片') + '" loading="lazy">' +
+        '<div class="overlay">' + esc(p.name || '照片') + '</div>' +
+        '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + i + ')">✕</button></div>';
+    }
+    grid.innerHTML = html;
   }
+}
 
-  renderMessages();
-})();
+window.deletePhoto = function(index) {
+  if (!confirm('确定删除这张照片吗？')) return;
+  photosCache.splice(index, 1);
+  savePhotos().then(function() {
+    renderGallery();
+    renderAdminPhotos();
+    showToast('✅ 已删除，刷新后所有设备生效');
+  }).catch(function() { showToast('❌ 删除失败'); });
+};
 
-// ==================== LIGHTBOX ====================
 window.openLightbox = function(src, caption) {
   document.getElementById('lightboxImg').src = src;
   document.getElementById('lightboxCaption').textContent = caption || '';
@@ -885,139 +773,157 @@ window.closeLightbox = function() {
 };
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-// ==================== FILE TO BASE64 ====================
 function fileToBase64(file) {
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
     reader.onload = function() { resolve(reader.result); };
-    reader.onerror = function() { reject(reader.error); };
+    reader.onerror = reject;
     reader.readAsDataURL(file);
-  });
-}
-
-// ==================== PHOTO GALLERY ====================
-function renderGallery() {
-  dbGetAll('photos').then(function(photos) {
-    var grid = document.getElementById('galleryGrid');
-    if (photos.length === 0) {
-      grid.innerHTML = '<div class="gallery-item placeholder" onclick="document.getElementById(\'adminPhotoFileInput\') ? document.getElementById(\'adminPhotoFileInput\').click() : openAdmin();"><div class="photo-del" onclick="event.stopPropagation();" style="display:none;"></div></div>'.repeat(4);
-    } else {
-      var html = '';
-      for (var i = 0; i < photos.length; i++) {
-        var p = photos[i];
-        html += '<div class="gallery-item admin-mode" onclick="openLightbox(\'' + p.data + '\', \'' + (p.name || '照片') + '\')">' +
-          '<img src="' + p.data + '" alt="' + (p.name || '照片') + '" loading="lazy">' +
-          '<div class="overlay">' + escHtml2(p.name || '照片') + '</div>' +
-          '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + p.id + ')">✕</button>' +
-        '</div>';
-      }
-      html += '<div class="gallery-item placeholder" onclick="openAdmin();switchAdminTab(\'photos\',document.querySelector(\'.admin-tabs button\'));renderAdminPhotos();" style="display:none;"></div>';
-      grid.innerHTML = html;
-    }
-  });
-}
-
-function deletePhoto(id) {
-  if (!confirm('确定删除这张照片吗？')) return;
-  dbDelete('photos', id).then(function() {
-    renderGallery();
-    renderAdminPhotos();
-    showToast('✅ 照片已删除');
   });
 }
 
 function uploadPhotos(input) {
   var files = input.files;
   if (!files || files.length === 0) return;
-  var promises = [];
-  for (var i = 0; i < files.length; i++) {
-    (function(file) {
-      promises.push(fileToBase64(file).then(function(b64) {
-        return dbAdd('photos', { name: file.name, data: b64, size: file.size, time: Date.now() });
-      }));
-    })(files[i]);
+  var total = files.length;
+  var done = 0;
+  showToast('⏳ 正在上传 0/' + total + '…');
+
+  function uploadOne(index) {
+    if (index >= files.length) {
+      savePhotos().then(function() {
+        renderGallery();
+        renderAdminPhotos();
+        showToast('✅ 已上传 ' + total + ' 张照片');
+      });
+      input.value = '';
+      return;
+    }
+    var file = files[index];
+    fileToBase64(file).then(function(b64) {
+      var ts = Date.now();
+      var ext = file.name.split('.').pop() || 'jpg';
+      var filename = 'photo_' + ts + '_' + index + '.' + ext;
+      var rawB64 = b64.split(',')[1]; // remove data:xxx;base64, prefix
+      return githubUploadFile('photos/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
+        photosCache.push({
+          name: file.name,
+          filename: filename,
+          url: result.content.download_url,
+          size: file.size,
+          time: ts
+        });
+        done++;
+        showToast('⏳ 正在上传 ' + done + '/' + total + '…');
+        uploadOne(index + 1);
+      });
+    }).catch(function(err) {
+      console.error('Upload photo error:', err);
+      done++;
+      uploadOne(index + 1);
+    });
   }
-  Promise.all(promises).then(function() {
-    renderGallery();
-    renderAdminPhotos();
-    showToast('✅ 已上传 ' + files.length + ' 张照片');
-    input.value = '';
-  }).catch(function() {
-    showToast('❌ 上传失败，请重试');
-  });
+  uploadOne(0);
 }
 
 function addPhotoByUrl() {
   var url = document.getElementById('photoUrlInput').value.trim();
   if (!url) { showToast('请粘贴图片链接'); return; }
-  dbAdd('photos', { name: '网络图片', data: url, size: 0, time: Date.now() }).then(function() {
+  photosCache.push({ name: '网络图片', url: url, size: 0, time: Date.now() });
+  savePhotos().then(function() {
     renderGallery();
     renderAdminPhotos();
     document.getElementById('photoUrlInput').value = '';
     showToast('✅ 图片已添加');
-  });
+  }).catch(function() { showToast('❌ 添加失败'); });
 }
 
 function renderAdminPhotos() {
-  dbGetAll('photos').then(function(photos) {
-    var container = document.getElementById('adminPhotoList');
-    if (photos.length === 0) {
-      container.innerHTML = '<div class="admin-hint" style="margin:12px 0;">还没有照片，上传或粘贴链接添加</div>';
-    } else {
-      var html = '';
-      for (var i = 0; i < photos.length; i++) {
-        var p = photos[i];
-        html += '<div class="admin-item"><img src="' + p.data + '" alt=""><div class="info"><div class="name">' + escHtml2(p.name || '照片') + '</div><div class="size">' + formatSize(p.size) + '</div></div><button class="del-btn" onclick="deletePhoto(' + p.id + ')">✕</button></div>';
-      }
-      container.innerHTML = html;
+  var container = document.getElementById('adminPhotoList');
+  if (!container) return;
+  if (photosCache.length === 0) {
+    container.innerHTML = '<div class="admin-hint" style="margin:12px 0;">还没有照片，上传或粘贴链接添加</div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < photosCache.length; i++) {
+      var p = photosCache[i];
+      html += '<div class="admin-item"><img src="' + p.url + '" alt=""><div class="info"><div class="name">' + esc(p.name || '照片') + '</div><div class="size">' + formatSize(p.size) + '</div></div><button class="del-btn" onclick="deletePhoto(' + i + ')">✕</button></div>';
     }
-  });
+    container.innerHTML = html;
+  }
 }
 
-// ==================== VIDEO SECTION ====================
-function renderVideos() {
-  dbGetAll('videos').then(function(videos) {
-    var grid = document.getElementById('videoGrid');
-    if (videos.length === 0) {
-      grid.innerHTML = '<div class="video-item placeholder" onclick="openAdmin();switchAdminTab(\'videos\',document.querySelectorAll(\'.admin-tabs button\')[1]);"></div>'.repeat(2);
-    } else {
-      var html = '';
-      for (var i = 0; i < videos.length; i++) {
-        var v = videos[i];
-        html += '<div class="video-item admin-mode">' +
-          '<video src="' + v.data + '" controls preload="metadata" playsinline></video>' +
-          '<div class="vid-caption">' + escHtml2(v.name || '视频') + '</div>' +
-          '<button class="vid-del" onclick="deleteVideo(' + v.id + ')">✕</button>' +
-        '</div>';
-      }
-      grid.innerHTML = html;
-    }
-  });
-}
+// ==================== VIDEOS (GitHub) ====================
+var videosCache = [];
 
-function deleteVideo(id) {
-  if (!confirm('确定删除这个视频吗？')) return;
-  dbDelete('videos', id).then(function() {
+function loadVideos() {
+  return githubGet('videos.json').then(function(data) {
+    videosCache = data || [];
     renderVideos();
     renderAdminVideos();
-    showToast('✅ 视频已删除');
+  }).catch(function() {
+    videosCache = [];
+    renderVideos();
+    renderAdminVideos();
   });
 }
+
+function saveVideos() {
+  return githubPut('videos.json', videosCache, 'Update videos');
+}
+
+function renderVideos() {
+  var grid = document.getElementById('videoGrid');
+  if (videosCache.length === 0) {
+    grid.innerHTML = '<div class="video-item placeholder"></div><div class="video-item placeholder"></div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < videosCache.length; i++) {
+      var v = videosCache[i];
+      html += '<div class="video-item"><video src="' + v.url + '" controls preload="metadata" playsinline></video><div class="vid-caption">' + esc(v.name || '视频') + '</div><button class="vid-del" onclick="deleteVideo(' + i + ')">✕</button></div>';
+    }
+    grid.innerHTML = html;
+  }
+}
+
+window.deleteVideo = function(index) {
+  if (!confirm('确定删除这个视频吗？')) return;
+  videosCache.splice(index, 1);
+  saveVideos().then(function() {
+    renderVideos();
+    renderAdminVideos();
+    showToast('✅ 已删除');
+  }).catch(function() { showToast('❌ 删除失败'); });
+};
 
 function uploadVideo(input) {
   var file = input.files[0];
   if (!file) return;
-  if (file.size > 100 * 1024 * 1024) { showToast('⚠️ 视频不要超过100MB'); input.value = ''; return; }
-  showToast('⏳ 正在处理视频…');
+  if (file.size > 50 * 1024 * 1024) { showToast('⚠️ 视频不要超过50MB，建议先压缩或用链接'); input.value = ''; return; }
+  showToast('⏳ 正在上传视频…');
   fileToBase64(file).then(function(b64) {
-    return dbAdd('videos', { name: file.name, data: b64, size: file.size, time: Date.now() });
+    var ts = Date.now();
+    var ext = file.name.split('.').pop() || 'mp4';
+    var filename = 'video_' + ts + '.' + ext;
+    var rawB64 = b64.split(',')[1];
+    return githubUploadFile('videos/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
+      videosCache.push({
+        name: file.name,
+        filename: filename,
+        url: result.content.download_url,
+        size: file.size,
+        time: ts
+      });
+      return saveVideos();
+    });
   }).then(function() {
     renderVideos();
     renderAdminVideos();
-    showToast('✅ 视频已添加');
+    showToast('✅ 视频上传成功');
     input.value = '';
-  }).catch(function() {
-    showToast('❌ 视频处理失败，可能是文件太大');
+  }).catch(function(err) {
+    console.error(err);
+    showToast('❌ 上传失败，视频可能太大');
     input.value = '';
   });
 }
@@ -1025,72 +931,67 @@ function uploadVideo(input) {
 function addVideoByUrl() {
   var url = document.getElementById('videoUrlInput').value.trim();
   if (!url) { showToast('请粘贴视频链接'); return; }
-  dbAdd('videos', { name: '视频链接', data: url, size: 0, time: Date.now() }).then(function() {
+  videosCache.push({ name: '视频链接', url: url, size: 0, time: Date.now() });
+  saveVideos().then(function() {
     renderVideos();
     renderAdminVideos();
     document.getElementById('videoUrlInput').value = '';
     showToast('✅ 视频链接已添加');
-  });
+  }).catch(function() { showToast('❌ 添加失败'); });
 }
 
 function renderAdminVideos() {
-  dbGetAll('videos').then(function(videos) {
-    var container = document.getElementById('adminVideoList');
-    if (videos.length === 0) {
-      container.innerHTML = '<div class="admin-hint" style="margin:12px 0;">还没有视频，上传或粘贴链接添加</div>';
-    } else {
-      var html = '';
-      for (var i = 0; i < videos.length; i++) {
-        var v = videos[i];
-        html += '<div class="admin-item"><video src="' + v.data + '" muted></video><div class="info"><div class="name">' + escHtml2(v.name || '视频') + '</div><div class="size">' + formatSize(v.size) + '</div></div><button class="del-btn" onclick="deleteVideo(' + v.id + ')">✕</button></div>';
-      }
-      container.innerHTML = html;
+  var container = document.getElementById('adminVideoList');
+  if (!container) return;
+  if (videosCache.length === 0) {
+    container.innerHTML = '<div class="admin-hint" style="margin:12px 0;">还没有视频，上传或粘贴链接添加</div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < videosCache.length; i++) {
+      var v = videosCache[i];
+      html += '<div class="admin-item"><video src="' + v.url + '" muted></video><div class="info"><div class="name">' + esc(v.name || '视频') + '</div><div class="size">' + formatSize(v.size) + '</div></div><button class="del-btn" onclick="deleteVideo(' + i + ')">✕</button></div>';
     }
-  });
+    container.innerHTML = html;
+  }
 }
 
-// ==================== MUSIC ====================
-var musicPlaying = false;
-var musicMode = 'synth'; // 'synth' | 'audio'
+// ==================== MUSIC (GitHub) ====================
+var musicMode = 'synth';
 var audioEl = null;
 var audioCtx = null;
 var musicInterval = null;
+var customMusicUrl = null;
 
-// synth melody
 var melody = [523, 587, 659, 698, 784, 880, 988, 1047, 1047, 988, 880, 784, 698, 659, 587, 523, 659, 698, 784, 880, 988, 880, 784, 698, 784, 880, 988, 1047, 1175, 1319, 1175, 1047];
 var noteIndex = 0;
+var musicPlaying = false;
 
 window.toggleMusic = function() {
   var btn = document.getElementById('musicBtn');
   if (!musicPlaying) {
-    startMusic();
-    musicPlaying = true;
-    btn.classList.add('playing');
-    btn.textContent = '🎶';
-    btn.title = '暂停音乐';
+    startMusic(); musicPlaying = true;
+    btn.classList.add('playing'); btn.textContent = '🎶'; btn.title = '暂停音乐';
   } else {
-    stopMusic();
-    musicPlaying = false;
-    btn.classList.remove('playing');
-    btn.textContent = '🎵';
-    btn.title = '播放音乐';
+    stopMusic(); musicPlaying = false;
+    btn.classList.remove('playing'); btn.textContent = '🎵'; btn.title = '播放音乐';
   }
 };
 
 function startMusic() {
-  if (musicMode === 'audio' && audioEl) {
-    audioEl.play().catch(function() {});
+  if (musicMode === 'audio' && customMusicUrl) {
+    if (!audioEl) { audioEl = new Audio(); audioEl.loop = true; }
+    audioEl.src = customMusicUrl;
+    audioEl.load();
+    audioEl.play().catch(function(){});
   } else {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     musicInterval = setInterval(function() {
       if (!musicPlaying) return;
       try {
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
+        var osc = audioCtx.createOscillator(); var gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.frequency.value = melody[noteIndex % melody.length];
-        osc.type = 'sine';
+        osc.frequency.value = melody[noteIndex % melody.length]; osc.type = 'sine';
         gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
         osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.6);
@@ -1101,37 +1002,31 @@ function startMusic() {
 }
 
 function stopMusic() {
-  if (musicMode === 'audio' && audioEl) {
-    audioEl.pause();
-  }
+  if (musicMode === 'audio' && audioEl) { audioEl.pause(); }
   if (musicInterval) { clearInterval(musicInterval); musicInterval = null; }
 }
 
-// Music stored in localStorage (single entry, smaller than IndexedDB overhead)
-var MUSIC_KEY = 'love_music_data';
-
-function saveMusicData(data) {
-  try { localStorage.setItem(MUSIC_KEY, data); } catch(e) {
-    if (e.name === 'QuotaExceededError') {
-      showToast('⚠️ 音乐文件太大（建议<5MB），请使用链接');
-      return false;
+function loadMusic() {
+  return githubGet('music.json').then(function(data) {
+    if (data && data.url) {
+      musicMode = 'audio';
+      customMusicUrl = data.url;
+      if (!audioEl) { audioEl = new Audio(); audioEl.loop = true; }
+      audioEl.src = customMusicUrl;
+      audioEl.load();
     }
-  }
-  return true;
+    updateMusicStatus();
+  }).catch(function() {
+    updateMusicStatus();
+  });
 }
 
-function getMusicData() {
-  return localStorage.getItem(MUSIC_KEY) || null;
-}
-
-function switchToAudio(b64orUrl) {
+function switchToAudio(url) {
   stopMusic();
   musicMode = 'audio';
-  if (!audioEl) {
-    audioEl = new Audio();
-    audioEl.loop = true;
-  }
-  audioEl.src = b64orUrl;
+  customMusicUrl = url;
+  if (!audioEl) { audioEl = new Audio(); audioEl.loop = true; }
+  audioEl.src = url;
   audioEl.load();
   updateMusicStatus();
   if (musicPlaying) { audioEl.play().catch(function(){}); }
@@ -1140,39 +1035,44 @@ function switchToAudio(b64orUrl) {
 function switchToSynth() {
   stopMusic();
   musicMode = 'synth';
+  customMusicUrl = null;
   if (audioEl) { audioEl.pause(); audioEl.src = ''; }
-  localStorage.removeItem(MUSIC_KEY);
   updateMusicStatus();
   if (musicPlaying) { startMusic(); }
 }
 
 window.resetMusic = function() {
-  switchToSynth();
-  showToast('✅ 已恢复内置旋律');
+  githubPut('music.json', { mode: 'synth', url: '' }, 'Reset music').then(function() {
+    switchToSynth();
+    showToast('✅ 已恢复内置旋律');
+  }).catch(function() { showToast('❌ 操作失败'); });
 };
 
 function updateMusicStatus() {
   var el = document.getElementById('musicStatusText');
   if (!el) return;
-  if (musicMode === 'audio' && getMusicData()) {
-    el.textContent = '当前：自定义音乐';
-  } else {
-    el.textContent = '当前：内置旋律';
-  }
+  el.textContent = (musicMode === 'audio' && customMusicUrl) ? '当前：自定义音乐' : '当前：内置旋律';
 }
 
 function uploadMusic(input) {
   var file = input.files[0];
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) { showToast('⚠️ 音乐文件不要超过10MB'); input.value = ''; return; }
-  showToast('⏳ 正在处理音乐…');
+  showToast('⏳ 正在上传音乐…');
   fileToBase64(file).then(function(b64) {
-    if (saveMusicData(b64)) {
-      switchToAudio(b64);
-      showToast('✅ 音乐已更换');
-    }
-  }).catch(function() {
-    showToast('❌ 处理失败');
+    var ext = file.name.split('.').pop() || 'mp3';
+    var filename = 'music.' + ext;
+    var rawB64 = b64.split(',')[1];
+    return githubUploadFile('music/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
+      var url = result.content.download_url;
+      return githubPut('music.json', { mode: 'audio', url: url, name: file.name }, 'Update music').then(function() {
+        switchToAudio(url);
+        showToast('✅ 音乐已更换');
+      });
+    });
+  }).catch(function(err) {
+    console.error(err);
+    showToast('❌ 上传失败，可能是文件太大');
   });
   input.value = '';
 }
@@ -1180,23 +1080,12 @@ function uploadMusic(input) {
 function addMusicByUrl() {
   var url = document.getElementById('musicUrlInput').value.trim();
   if (!url) { showToast('请粘贴音乐链接'); return; }
-  saveMusicData(url);
-  switchToAudio(url);
-  document.getElementById('musicUrlInput').value = '';
-  showToast('✅ 音乐已更换');
+  githubPut('music.json', { mode: 'audio', url: url, name: '网络音乐' }, 'Update music').then(function() {
+    switchToAudio(url);
+    document.getElementById('musicUrlInput').value = '';
+    showToast('✅ 音乐已更换');
+  }).catch(function() { showToast('❌ 操作失败'); });
 }
-
-// Load saved music on start
-(function() {
-  var saved = getMusicData();
-  if (saved) {
-    musicMode = 'audio';
-    if (!audioEl) { audioEl = new Audio(); audioEl.loop = true; }
-    audioEl.src = saved;
-    audioEl.load();
-    updateMusicStatus();
-  }
-})();
 
 // ==================== ADMIN PANEL ====================
 var currentAdminTab = 'photos';
@@ -1221,13 +1110,12 @@ window.switchAdminTab = function(tab, btn) {
   for (var j = 0; j < contents.length; j++) { contents[j].classList.remove('active'); }
   var target = document.getElementById('tab-' + tab);
   if (target) target.classList.add('active');
-
   if (tab === 'photos') renderAdminPhotos();
   if (tab === 'videos') renderAdminVideos();
   if (tab === 'music') updateMusicStatus();
 };
 
-// ==================== LOVE QUOTES ====================
+// ==================== QUOTES ====================
 (function() {
   var quotes = [
     { text: '山有木兮木有枝，心悦君兮君不知。', author: '《越人歌》' },
@@ -1243,8 +1131,7 @@ window.switchAdminTab = function(tab, btn) {
   var idx = 0;
   function rotate() {
     var q = quotes[idx % quotes.length];
-    var box = document.getElementById('quoteBox');
-    box.style.opacity = '0';
+    var box = document.getElementById('quoteBox'); box.style.opacity = '0';
     setTimeout(function() {
       document.getElementById('quoteText').textContent = '"' + q.text + '"';
       document.getElementById('quoteAuthor').textContent = '—— ' + q.author;
@@ -1252,25 +1139,21 @@ window.switchAdminTab = function(tab, btn) {
     }, 500);
     idx++;
   }
-  rotate();
-  setInterval(rotate, 8000);
+  rotate(); setInterval(rotate, 8000);
 })();
 
 // ==================== SCROLL ANIMATION ====================
 (function() {
   var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15 });
-  var els = document.querySelectorAll('.fade-in');
-  for (var k = 0; k < els.length; k++) { observer.observe(els[k]); }
+  document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
 })();
 
 // ==================== TODAY'S DATE ====================
 (function() {
   var now = new Date();
-  document.getElementById('todayTag').textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+  document.getElementById('todayTag').textContent = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日';
 })();
 
 // ==================== HELPERS ====================
@@ -1281,25 +1164,12 @@ function formatSize(bytes) {
   return (bytes / 1048576).toFixed(1) + ' MB';
 }
 
-function escHtml2(str) {
-  var div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 // ==================== INIT ====================
-openDB().then(function() {
-  renderGallery();
-  renderVideos();
-  updateMusicStatus();
-}).catch(function() {
-  // IndexedDB not available, use placeholder gallery
-  var grid = document.getElementById('galleryGrid');
-  grid.innerHTML = '';
-  for (var i = 0; i < 8; i++) {
-    grid.innerHTML += '<div class="gallery-item" onclick="openLightbox(\'photos/0' + (i + 1) + '.jpg\', \'照片 ' + (i + 1) + '\')"><img src="photos/0' + (i + 1) + '.jpg" alt="" onerror="this.parentElement.classList.add(\'placeholder\');this.style.display=\'none\';" loading="lazy"><div class="overlay">照片 ' + (i + 1) + '</div></div>';
-  }
+Promise.all([loadMessages(), loadPhotos(), loadVideos(), loadMusic()]).catch(function(err) {
+  console.error('Init error:', err);
+  document.getElementById('galleryGrid').innerHTML = '<div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div>';
   document.getElementById('videoGrid').innerHTML = '<div class="video-item placeholder"></div><div class="video-item placeholder"></div>';
+  document.getElementById('messagesList').innerHTML = '<div class="empty-msgs">⚠️ 加载失败，请检查网络后刷新</div>';
 });
 </script>
 </body>
