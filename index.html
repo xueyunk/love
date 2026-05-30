@@ -508,13 +508,21 @@ function checkPassword() {
 document.getElementById('pwdInput').focus();
 
 // ==================== GITHUB API ====================
-var GITHUB_ONLINE = false; // will be set after connectivity check
+var GITHUB_ONLINE = false;
+var CDN_BASE = 'https://cdn.jsdelivr.net/gh/xueyunk/love@master/data/';
 
 function strToBase64(str) {
   var bytes = new TextEncoder().encode(str);
   var bin = [];
   for (var i = 0; i < bytes.length; i++) { bin.push(String.fromCharCode(bytes[i])); }
   return btoa(bin.join(''));
+}
+
+function base64ToStr(b64) {
+  var binary = atob(b64.replace(/\s/g, ''));
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i < binary.length; i++) { bytes[i] = binary.charCodeAt(i) & 0xFF; }
+  return new TextDecoder('utf-8').decode(bytes);
 }
 
 function githubGet(path) {
@@ -526,7 +534,7 @@ function githubGet(path) {
     return r.json();
   }).then(function(data) {
     if (!data || !data.content) return null;
-    return JSON.parse(atob(data.content.replace(/\s/g, '')));
+    return JSON.parse(base64ToStr(data.content));
   });
 }
 
@@ -792,7 +800,7 @@ function uploadPhotos(input) {
         photosCache.push({
           name: file.name,
           filename: filename,
-          url: result.content.download_url,
+          url: CDN_BASE + 'photos/' + filename,
           size: file.size,
           time: ts
         });
@@ -893,7 +901,7 @@ function uploadVideo(input) {
       videosCache.push({
         name: file.name,
         filename: filename,
-        url: result.content.download_url,
+        url: CDN_BASE + 'videos/' + filename,
         size: file.size,
         time: ts
       });
@@ -1047,7 +1055,7 @@ function uploadMusic(input) {
     var filename = 'music.' + ext;
     var rawB64 = b64.split(',')[1];
     return githubUploadFile('music/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
-      var url = result.content.download_url;
+      var url = CDN_BASE + 'music/' + filename;
       return githubPut('music.json', { mode: 'audio', url: url, name: file.name }, 'Update music').then(function() {
         switchToAudio(url);
         showToast('✅ 音乐已更换');
