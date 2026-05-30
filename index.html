@@ -762,13 +762,29 @@ function renderGallery() {
     var html = '';
     for (var i = 0; i < photosCache.length; i++) {
       var p = photosCache[i];
-      html += '<div class="gallery-item" onclick="openLightbox(\'' + p.url + '\', \'' + esc(p.name || '照片') + '\')">' +
-        '<img src="' + p.url + '" alt="' + esc(p.name || '照片') + '" loading="lazy">' +
+      html += '<div class="gallery-item" onclick="openLightbox(' + i + ')" data-idx="' + i + '">' +
+        '<img src="' + p.url + '" alt="" loading="lazy" onerror="loadPhotoFallback(this,' + i + ')">' +
         '<div class="overlay">' + esc(p.name || '照片') + '</div>' +
         '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + i + ')">✕</button></div>';
     }
     grid.innerHTML = html;
   }
+}
+
+function loadPhotoFallback(img, idx) {
+  if (img.dataset.loading) return;
+  img.dataset.loading = '1';
+  var p = photosCache[idx];
+  if (!p || !p.apiPath) return;
+  fetch(GITHUB_API + p.apiPath + '?ref=' + DATA_BRANCH, {
+    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  }).then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data && data.content) {
+      img.src = 'data:image/' + (p.filename.split('.').pop() || 'jpeg') + ';base64,' + data.content.replace(/\s/g, '');
+      img.onerror = null;
+    }
+  }).catch(function() {});
 }
 
 window.deletePhoto = function(index) {
@@ -781,9 +797,14 @@ window.deletePhoto = function(index) {
   }).catch(function() { showToast('❌ 删除失败'); });
 };
 
-window.openLightbox = function(src, caption) {
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightboxCaption').textContent = caption || '';
+window.openLightbox = function(idx) {
+  var p = photosCache[idx];
+  if (!p) return;
+  var lbImg = document.getElementById('lightboxImg');
+  lbImg.src = p.url;
+  lbImg.dataset.photoIdx = idx;
+  lbImg.onerror = function() { loadPhotoFallback(lbImg, idx); };
+  document.getElementById('lightboxCaption').textContent = p.name || '照片';
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow = 'hidden';
 };
@@ -829,6 +850,7 @@ function uploadPhotos(input) {
         photosCache.push({
           name: file.name,
           filename: filename,
+          apiPath: 'photos/' + filename,
           url: CDN_BASE + 'photos/' + filename,
           size: file.size,
           time: ts
