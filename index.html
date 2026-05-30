@@ -247,8 +247,12 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 .admin-trigger:hover { opacity: 0.7; }
 
 /* Toast */
-.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 99999; background: var(--deep); color: white; padding: 10px 24px; border-radius: 20px; font-size: 0.9rem; font-family: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 99999; background: var(--deep); color: white; padding: 10px 24px; border-radius: 20px; font-size: 0.9rem; font-family: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.15); white-space: pre-line; text-align: center; }
 .toast.show { opacity: 1; }
+
+/* Network Badge */
+.network-badge { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 99998; background: #e74c3c; color: white; padding: 6px 16px; border-radius: 14px; font-size: 0.78rem; font-family: inherit; cursor: pointer; box-shadow: 0 2px 10px rgba(231,76,60,0.3); animation: pulseBadge 2s ease infinite; }
+@keyframes pulseBadge { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
 
 /* Loading spinner */
 .loading-spinner { text-align: center; padding: 20px; color: var(--deep); opacity: 0.6; font-size: 0.9rem; }
@@ -293,6 +297,8 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+<!-- Network Status Badge -->
+<div class="network-badge" id="networkBadge" style="display:none;" onclick="showToast('GitHub API无法连接，当前为离线模式。\n数据仅保存在本设备，不跨设备同步。\n请使用WiFi或换个网络环境。')">🔴 离线模式</div>
 
 <!-- Floating Hearts -->
 <div class="hearts-container" id="heartsContainer"></div>
@@ -504,12 +510,21 @@ function checkPassword() {
 document.getElementById('pwdInput').focus();
 
 // ==================== GITHUB API ====================
+var GITHUB_ONLINE = false; // will be set after connectivity check
+
+function strToBase64(str) {
+  var bytes = new TextEncoder().encode(str);
+  var bin = [];
+  for (var i = 0; i < bytes.length; i++) { bin.push(String.fromCharCode(bytes[i])); }
+  return btoa(bin.join(''));
+}
+
 function githubGet(path) {
   return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (r.status === 404) return null;
-    if (!r.ok) throw new Error('API error: ' + r.status);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   }).then(function(data) {
     if (!data || !data.content) return null;
@@ -517,79 +532,49 @@ function githubGet(path) {
   });
 }
 
-function githubGetRaw(path) {
-  return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
-    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
-  }).then(function(r) {
-    if (r.status === 404) return null;
-    if (!r.ok) throw new Error('API error: ' + r.status);
-    return r.json();
-  }).then(function(data) {
-    if (!data) return null;
-    return {
-      content: data.content,
-      sha: data.sha,
-      url: data.download_url
-    };
-  });
-}
-
 function githubPut(path, content, message) {
   var jsonStr = JSON.stringify(content, null, 2);
   var body = {
     message: message,
-    content: btoa(unescape(encodeURIComponent(jsonStr))),
+    content: strToBase64(jsonStr),
     branch: DATA_BRANCH
   };
-  // Get existing sha first
   return fetch(GITHUB_API + path + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (r.ok) return r.json();
     if (r.status === 404) return null;
-    throw new Error('API error: ' + r.status);
+    throw new Error('HTTP ' + r.status);
   }).then(function(data) {
     if (data && data.sha) body.sha = data.sha;
     return fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/' + path, {
       method: 'PUT',
-      headers: {
-        'Authorization': 'token ' + GITHUB_TOKEN,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Authorization': 'token ' + GITHUB_TOKEN, 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
   }).then(function(r) {
-    if (!r.ok) throw new Error('PUT error: ' + r.status);
+    if (!r.ok) throw new Error('PUT ' + r.status);
     return r.json();
   });
 }
 
-// For binary files (photos, videos, music)
 function githubUploadFile(filePath, base64Data, message) {
-  // base64Data should be without the data:xxx;base64, prefix
-  var body = {
-    message: message,
-    content: base64Data,
-    branch: DATA_BRANCH
-  };
+  var body = { message: message, content: base64Data, branch: DATA_BRANCH };
   return fetch(GITHUB_API + filePath + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (r.ok) return r.json();
     if (r.status === 404) return null;
-    throw new Error('API error: ' + r.status);
+    throw new Error('HTTP ' + r.status);
   }).then(function(data) {
     if (data && data.sha) body.sha = data.sha;
     return fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/' + filePath, {
       method: 'PUT',
-      headers: {
-        'Authorization': 'token ' + GITHUB_TOKEN,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Authorization': 'token ' + GITHUB_TOKEN, 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
   }).then(function(r) {
-    if (!r.ok) throw new Error('Upload error: ' + r.status);
+    if (!r.ok) throw new Error('Upload ' + r.status);
     return r.json();
   });
 }
@@ -1165,12 +1150,96 @@ function formatSize(bytes) {
 }
 
 // ==================== INIT ====================
-Promise.all([loadMessages(), loadPhotos(), loadVideos(), loadMusic()]).catch(function(err) {
+function checkGitHubConnectivity() {
+  return fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/data/test.json?ref=' + DATA_BRANCH + '&t=' + Date.now(), {
+    headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
+  }).then(function(r) {
+    GITHUB_ONLINE = true;
+    document.getElementById('networkBadge').style.display = 'none';
+    return true;
+  }).catch(function() {
+    GITHUB_ONLINE = false;
+    document.getElementById('networkBadge').style.display = 'block';
+    return false;
+  });
+}
+
+function loadFromLocal() {
+  // Messages
+  try {
+    var localMsgs = JSON.parse(localStorage.getItem('love_messages') || '[]');
+    messagesCache = localMsgs;
+    renderMessages();
+  } catch(e) {}
+  // Photos
+  try {
+    var localPhotos = JSON.parse(localStorage.getItem('love_photos') || '[]');
+    photosCache = localPhotos;
+    renderGallery();
+    renderAdminPhotos();
+  } catch(e) {}
+  // Videos
+  try {
+    var localVideos = JSON.parse(localStorage.getItem('love_videos') || '[]');
+    videosCache = localVideos;
+    renderVideos();
+    renderAdminVideos();
+  } catch(e) {}
+  // Music
+  try {
+    var localMusic = JSON.parse(localStorage.getItem('love_music') || 'null');
+    if (localMusic && localMusic.url) {
+      musicMode = 'audio';
+      customMusicUrl = localMusic.url;
+      if (!audioEl) { audioEl = new Audio(); audioEl.loop = true; }
+      audioEl.src = customMusicUrl;
+    }
+    updateMusicStatus();
+  } catch(e) {}
+}
+
+function saveToLocal() {
+  try { localStorage.setItem('love_messages', JSON.stringify(messagesCache)); } catch(e) {}
+  try { localStorage.setItem('love_photos', JSON.stringify(photosCache)); } catch(e) {}
+  try { localStorage.setItem('love_videos', JSON.stringify(videosCache)); } catch(e) {}
+  try { localStorage.setItem('love_music', JSON.stringify({mode: musicMode, url: customMusicUrl || ''})); } catch(e) {}
+}
+
+// Override save functions based on connectivity
+var originalGithubPut = githubPut;
+var originalGithubUpload = githubUploadFile;
+
+// Check connectivity first, then load data
+checkGitHubConnectivity().then(function() {
+  if (GITHUB_ONLINE) {
+    return Promise.all([loadMessages(), loadPhotos(), loadVideos(), loadMusic()]);
+  } else {
+    loadFromLocal();
+    // Set up save overrides for local mode
+    githubPut = function(path, content, msg) {
+      if (path === 'messages.json') { messagesCache = content; }
+      else if (path === 'photos.json') { photosCache = content; }
+      else if (path === 'videos.json') { videosCache = content; }
+      else if (path === 'music.json') { customMusicUrl = content.url || ''; musicMode = content.mode || 'synth'; }
+      saveToLocal();
+      return Promise.resolve({ ok: true });
+    };
+    githubUploadFile = function(filePath, base64Data, message) {
+      return Promise.resolve({ content: { download_url: 'data:;base64,' + base64Data } });
+    };
+  }
+}).catch(function(err) {
   console.error('Init error:', err);
-  document.getElementById('galleryGrid').innerHTML = '<div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div>';
-  document.getElementById('videoGrid').innerHTML = '<div class="video-item placeholder"></div><div class="video-item placeholder"></div>';
-  document.getElementById('messagesList').innerHTML = '<div class="empty-msgs">⚠️ 加载失败，请检查网络后刷新</div>';
+  loadFromLocal();
+  showToast('⚠️ GitHub连接失败，使用本地存储模式');
 });
+
+// Error handler wrapper
+function showError(msg) {
+  document.getElementById('galleryGrid').innerHTML = '';
+  document.getElementById('videoGrid').innerHTML = '';
+  document.getElementById('messagesList').innerHTML = '<div class="empty-msgs">⚠️ ' + msg + '</div>';
+}
 </script>
 </body>
 </html>
