@@ -904,6 +904,49 @@ function fileToBase64(file) {
   });
 }
 
+function compressImage(file) {
+  return new Promise(function(resolve, reject) {
+    // Only compress images, pass videos/audio through
+    if (!file.type.match(/^image\//)) {
+      fileToBase64(file).then(resolve, reject);
+      return;
+    }
+    // Skip small files (< 200KB) and GIFs
+    if (file.size < 200 * 1024 || file.type === 'image/gif') {
+      fileToBase64(file).then(resolve, reject);
+      return;
+    }
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function() {
+      URL.revokeObjectURL(url);
+      var maxW = 1920;
+      var maxH = 1920;
+      var w = img.width;
+      var h = img.height;
+      if (w > maxW || h > maxH) {
+        var ratio = Math.min(maxW / w, maxH / h);
+        w = Math.round(w * ratio);
+        h = Math.round(h * ratio);
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      // JPEG quality 0.8 = barely noticeable loss, 5-10x smaller than PNG
+      var quality = 0.8;
+      var result = canvas.toDataURL('image/jpeg', quality);
+      resolve(result);
+    };
+    img.onerror = function() {
+      URL.revokeObjectURL(url);
+      fileToBase64(file).then(resolve, reject);
+    };
+    img.src = url;
+  });
+}
+
 function uploadPhotos(input) {
   var files = input.files;
   if (!files || files.length === 0) return;
@@ -922,9 +965,9 @@ function uploadPhotos(input) {
       return;
     }
     var file = files[index];
-    fileToBase64(file).then(function(b64) {
+    compressImage(file).then(function(b64) {
       var ts = Date.now();
-      var ext = file.name.split('.').pop() || 'jpg';
+      var ext = 'jpg'; // compression always outputs JPEG
       var filename = 'photo_' + ts + '_' + index + '.' + ext;
       var rawB64 = b64.split(',')[1]; // remove data:xxx;base64, prefix
       return githubUploadFile('photos/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
