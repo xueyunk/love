@@ -683,18 +683,32 @@ function saveMessages() {
   });
 }
 
-function renderMessages() {
+var MSGS_SHOW = 3;
+
+function renderMessages(showAll) {
   var list = document.getElementById('messagesList');
   if (messagesCache.length === 0) {
     list.innerHTML = '<div class="empty-msgs">还没有留言，来做第一个留言的人吧 💕</div>';
-  } else {
-    var html = '';
-    for (var i = messagesCache.length - 1; i >= 0; i--) {
-      var m = messagesCache[i];
-      html += '<div class="msg-bubble"><div class="msg-author">' + esc(m.author) + '</div><div class="msg-text">' + esc(m.text) + '</div><div class="msg-time">' + m.time + '</div><button class="msg-del" onclick="deleteMessage(' + i + ')">✕</button></div>';
-    }
-    list.innerHTML = html;
+    return;
   }
+  var html = '';
+  var total = messagesCache.length;
+  var items = showAll ? messagesCache : messagesCache.slice(Math.max(0, total - MSGS_SHOW));
+  var more = total > MSGS_SHOW && !showAll;
+
+  if (more) {
+    html += '<div style="text-align:center;padding:12px;cursor:pointer;color:var(--rose);" onclick="renderMessages(true)">'
+      + '📩 展开全部 ' + total + ' 条留言 ▼</div>';
+  }
+  for (var i = items.length - 1; i >= 0; i--) {
+    var realIdx = showAll ? total - items.length + i : total - items.length + i;
+    var m = items[i];
+    html += '<div class="msg-bubble"><div class="msg-author">' + esc(m.author) + '</div><div class="msg-text">' + esc(m.text) + '</div><div class="msg-time">' + m.time + '</div><button class="msg-del" onclick="deleteMessage(' + realIdx + ')">✕</button></div>';
+  }
+  if (showAll) {
+    html += '<div style="text-align:center;padding:8px;cursor:pointer;color:var(--deep);opacity:0.5;font-size:0.85rem;" onclick="renderMessages(false)">收起 ▲</div>';
+  }
+  list.innerHTML = html;
 }
 
 window.addMessage = function() {
@@ -754,32 +768,49 @@ function savePhotos() {
   });
 }
 
-function renderGallery() {
+var PHOTOS_SHOW = 3;
+
+function renderGallery(showAll) {
   var grid = document.getElementById('galleryGrid');
   if (photosCache.length === 0) {
-    grid.innerHTML = '<div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div>';
-  } else {
-    var html = '';
-    for (var i = 0; i < photosCache.length; i++) {
-      var p = photosCache[i];
-      html += '<div class="gallery-item" onclick="openLightbox(' + i + ')">' +
-        '<img src="" alt="" data-idx="' + i + '" class="lazy-photo" style="display:none">' +
-        '<div class="loading-spinner" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">📷</div>' +
-        '<div class="overlay">' + esc(p.name || '照片') + '</div>' +
-        '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + i + ')">✕</button></div>';
-    }
-    grid.innerHTML = html;
-    loadAllPhotos();
+    grid.innerHTML = '<div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div>';
+    return;
   }
+  var items = photosCache;
+  var more = items.length > PHOTOS_SHOW && !showAll;
+  if (!showAll) items = items.slice(0, PHOTOS_SHOW);
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var realIdx = !showAll ? i : i;
+    var p = items[i];
+    html += '<div class="gallery-item" onclick="openLightbox(' + realIdx + ')">' +
+      '<img src="" alt="" data-idx="' + realIdx + '" class="lazy-photo" style="display:none">' +
+      '<div class="loading-spinner" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">📷</div>' +
+      '<div class="overlay">' + esc(p.name || '照片') + '</div>' +
+      '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + realIdx + ')">✕</button></div>';
+  }
+  if (more) {
+    html += '<div class="gallery-item placeholder" onclick="renderGallery(true)" style="cursor:pointer;border-color:var(--rose);">'
+      + '<div style="text-align:center;padding:20px;color:var(--deep);">'
+      + '📷<br>查看全部 ' + photosCache.length + ' 张照片<br><span style="font-size:0.8rem;opacity:0.6;">点击展开</span></div></div>';
+  }
+  if (showAll) {
+    html += '<div class="gallery-item placeholder" onclick="renderGallery(false)" style="cursor:pointer;">'
+      + '<div style="text-align:center;padding:20px;color:var(--deep);opacity:0.6;">🔼<br>收起</div></div>';
+  }
+  grid.innerHTML = html;
+  loadAllPhotos();
 }
 
-var photoDataCache = {}; // in-memory cache: index -> base64 data URL
+var photoDataCache = {};
 
 function loadAllPhotos() {
   var imgs = document.querySelectorAll('.lazy-photo');
+  // Load first 3 immediately, rest with small delay
   for (var i = 0; i < imgs.length; i++) {
     (function(img, idx) {
-      setTimeout(function() { loadPhoto(idx, img); }, idx * 200);
+      var delay = idx < 3 ? idx * 50 : (idx - 3) * 300;
+      setTimeout(function() { loadPhoto(idx, img); }, delay);
     })(imgs[i], parseInt(imgs[i].dataset.idx));
   }
 }
