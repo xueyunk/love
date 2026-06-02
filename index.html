@@ -762,38 +762,76 @@ function renderGallery() {
     var html = '';
     for (var i = 0; i < photosCache.length; i++) {
       var p = photosCache[i];
-      html += '<div class="gallery-item" onclick="openLightbox(' + i + ')" data-idx="' + i + '">' +
-        '<img src="' + p.url + '" alt="" loading="lazy" onerror="loadPhotoFallback(this,' + i + ')">' +
+      html += '<div class="gallery-item" onclick="openLightbox(' + i + ')">' +
+        '<img src="" alt="" data-idx="' + i + '" class="lazy-photo" style="display:none">' +
+        '<div class="loading-spinner" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">📷</div>' +
         '<div class="overlay">' + esc(p.name || '照片') + '</div>' +
         '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + i + ')">✕</button></div>';
     }
     grid.innerHTML = html;
+    loadAllPhotos();
   }
 }
 
-function loadPhotoFallback(img, idx) {
-  if (img.dataset.loading) return;
-  img.dataset.loading = '1';
+var photoDataCache = {}; // in-memory cache: index -> base64 data URL
+
+function loadAllPhotos() {
+  var imgs = document.querySelectorAll('.lazy-photo');
+  for (var i = 0; i < imgs.length; i++) {
+    (function(img, idx) {
+      setTimeout(function() { loadPhoto(idx, img); }, idx * 200);
+    })(imgs[i], parseInt(imgs[i].dataset.idx));
+  }
+}
+
+function loadPhoto(idx, img) {
+  img = img || document.querySelector('.lazy-photo[data-idx="' + idx + '"]');
+  if (!img) return;
   var p = photosCache[idx];
-  if (!p || !p.apiPath) return;
+  if (!p) return;
+
+  // Check in-memory cache
+  if (photoDataCache[idx]) {
+    img.src = photoDataCache[idx];
+    img.style.display = '';
+    img.nextElementSibling && img.nextElementSibling.classList.contains('loading-spinner') && (img.nextElementSibling.style.display = 'none');
+    return;
+  }
+
+  // Fetch from GitHub API
   fetch(GITHUB_API + p.apiPath + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
-  }).then(function(r) { return r.json(); })
-  .then(function(data) {
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(data) {
     if (data && data.content) {
-      img.src = 'data:image/' + (p.filename.split('.').pop() || 'jpeg') + ';base64,' + data.content.replace(/\s/g, '');
-      img.onerror = null;
+      var ext = (p.filename || '').split('.').pop() || 'jpg';
+      var mime = 'image/' + (ext === 'png' ? 'png' : ext === 'gif' ? 'gif' : ext === 'webp' ? 'webp' : 'jpeg');
+      var dataUrl = 'data:' + mime + ';base64,' + data.content.replace(/\s/g, '');
+      photoDataCache[idx] = dataUrl;
+      img.src = dataUrl;
+      img.style.display = '';
+      var spinner = img.parentElement.querySelector('.loading-spinner');
+      if (spinner) spinner.style.display = 'none';
     }
-  }).catch(function() {});
+  }).catch(function() {
+    var p = photosCache[idx];
+    if (p && p.url && p.url.startsWith('http') && !p.url.includes('raw.githubusercontent')) {
+      img.src = p.url;
+      img.style.display = '';
+    }
+  });
 }
 
 window.deletePhoto = function(index) {
   if (!confirm('确定删除这张照片吗？')) return;
   photosCache.splice(index, 1);
+  photoDataCache = {}; // clear all cache since indices shifted
   savePhotos().then(function() {
     renderGallery();
     renderAdminPhotos();
-    showToast('✅ 已删除，刷新后所有设备生效');
+    showToast('✅ 已删除');
   }).catch(function() { showToast('❌ 删除失败'); });
 };
 
@@ -801,9 +839,21 @@ window.openLightbox = function(idx) {
   var p = photosCache[idx];
   if (!p) return;
   var lbImg = document.getElementById('lightboxImg');
-  lbImg.src = p.url;
-  lbImg.dataset.photoIdx = idx;
-  lbImg.onerror = function() { loadPhotoFallback(lbImg, idx); };
+  if (photoDataCache[idx]) {
+    lbImg.src = photoDataCache[idx];
+  } else {
+    lbImg.src = '';
+    loadPhoto(idx);
+    // Retry getting from cache
+    var retries = 0;
+    lbImg._loadTimer = setInterval(function() {
+      if (photoDataCache[idx]) {
+        lbImg.src = photoDataCache[idx];
+        clearInterval(lbImg._loadTimer);
+      }
+      if (++retries > 30) clearInterval(lbImg._loadTimer);
+    }, 300);
+  }
   document.getElementById('lightboxCaption').textContent = p.name || '照片';
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow = 'hidden';
