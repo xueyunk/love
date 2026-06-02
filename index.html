@@ -776,60 +776,45 @@ function renderGallery(showAll) {
     grid.innerHTML = '<div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div><div class="gallery-item placeholder"></div>';
     return;
   }
-  var items = photosCache;
-  var more = items.length > PHOTOS_SHOW && !showAll;
-  if (!showAll) items = items.slice(0, PHOTOS_SHOW);
+  var maxShow = showAll ? photosCache.length : Math.min(PHOTOS_SHOW, photosCache.length);
   var html = '';
-  for (var i = 0; i < items.length; i++) {
-    var realIdx = !showAll ? i : i;
-    var p = items[i];
-    html += '<div class="gallery-item" onclick="openLightbox(' + realIdx + ')">' +
-      '<img src="" alt="" data-idx="' + realIdx + '" class="lazy-photo" style="display:none">' +
-      '<div class="loading-spinner" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">📷</div>' +
-      '<div class="overlay">' + esc(p.name || '照片') + '</div>' +
-      '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + realIdx + ')">✕</button></div>';
+  for (var i = 0; i < maxShow; i++) {
+    var p = photosCache[i];
+    html += '<div class="gallery-item" onclick="openLightbox(' + i + ')">' +
+      '<img src="" alt="" data-pidx="' + i + '" class="lazy-photo" onerror="this.style.display=\'none\'">' +
+      '<div class="overlay">' + (p.name || '照片') + '</div>' +
+      '<button class="photo-del" onclick="event.stopPropagation();deletePhoto(' + i + ')">✕</button></div>';
   }
-  if (more) {
-    html += '<div class="gallery-item placeholder" onclick="renderGallery(true)" style="cursor:pointer;border-color:var(--rose);">'
-      + '<div style="text-align:center;padding:20px;color:var(--deep);">'
-      + '📷<br>查看全部 ' + photosCache.length + ' 张照片<br><span style="font-size:0.8rem;opacity:0.6;">点击展开</span></div></div>';
-  }
-  if (showAll) {
-    html += '<div class="gallery-item placeholder" onclick="renderGallery(false)" style="cursor:pointer;">'
-      + '<div style="text-align:center;padding:20px;color:var(--deep);opacity:0.6;">🔼<br>收起</div></div>';
+  if (photosCache.length > PHOTOS_SHOW) {
+    if (!showAll) {
+      html += '<div class="gallery-item placeholder" onclick="renderGallery(true)" style="cursor:pointer;border:2px dashed var(--rose);"><div style="text-align:center;color:var(--deep);padding:15px;">📷<br>查看全部 ' + photosCache.length + ' 张<br><span style="font-size:0.75rem;opacity:0.5;">点击展开</span></div></div>';
+    } else {
+      html += '<div class="gallery-item placeholder" onclick="renderGallery(false)" style="cursor:pointer;"><div style="text-align:center;color:var(--deep);opacity:0.5;padding:15px;">🔼<br>收起</div></div>';
+    }
   }
   grid.innerHTML = html;
-  loadAllPhotos();
+  // Load all visible photos immediately in parallel
+  var imgs = grid.querySelectorAll('.lazy-photo');
+  for (var j = 0; j < imgs.length; j++) {
+    loadPhoto(parseInt(imgs[j].dataset.pidx), imgs[j]);
+  }
 }
 
 var photoDataCache = {};
 
-function loadAllPhotos() {
-  var imgs = document.querySelectorAll('.lazy-photo');
-  // Load first 3 immediately, rest with small delay
-  for (var i = 0; i < imgs.length; i++) {
-    (function(img, idx) {
-      var delay = idx < 3 ? idx * 50 : (idx - 3) * 300;
-      setTimeout(function() { loadPhoto(idx, img); }, delay);
-    })(imgs[i], parseInt(imgs[i].dataset.idx));
-  }
-}
-
 function loadPhoto(idx, img) {
-  img = img || document.querySelector('.lazy-photo[data-idx="' + idx + '"]');
-  if (!img) return;
+  if (!img) img = document.querySelector('.lazy-photo[data-pidx="' + idx + '"]');
+  if (!img || img._loading) return;
+  img._loading = true;
   var p = photosCache[idx];
-  if (!p) return;
+  if (!p) { img._loading = false; return; }
 
-  // Check in-memory cache
   if (photoDataCache[idx]) {
     img.src = photoDataCache[idx];
-    img.style.display = '';
-    img.nextElementSibling && img.nextElementSibling.classList.contains('loading-spinner') && (img.nextElementSibling.style.display = 'none');
+    img._loading = false;
     return;
   }
 
-  // Fetch from GitHub API
   fetch(GITHUB_API + p.apiPath + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
@@ -842,17 +827,11 @@ function loadPhoto(idx, img) {
       var dataUrl = 'data:' + mime + ';base64,' + data.content.replace(/\s/g, '');
       photoDataCache[idx] = dataUrl;
       img.src = dataUrl;
-      img.style.display = '';
-      var spinner = img.parentElement.querySelector('.loading-spinner');
-      if (spinner) spinner.style.display = 'none';
     }
   }).catch(function() {
-    var p = photosCache[idx];
-    if (p && p.url && p.url.startsWith('http') && !p.url.includes('raw.githubusercontent')) {
-      img.src = p.url;
-      img.style.display = '';
-    }
+    if (p.url && !p.url.includes('raw.githubusercontent')) img.src = p.url;
   });
+  img._loading = false;
 }
 
 window.deletePhoto = function(index) {
@@ -870,24 +849,27 @@ window.openLightbox = function(idx) {
   var p = photosCache[idx];
   if (!p) return;
   var lbImg = document.getElementById('lightboxImg');
+  document.getElementById('lightboxCaption').textContent = p.name || '照片';
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+
   if (photoDataCache[idx]) {
     lbImg.src = photoDataCache[idx];
   } else {
     lbImg.src = '';
     loadPhoto(idx);
-    // Retry getting from cache
-    var retries = 0;
-    lbImg._loadTimer = setInterval(function() {
+    var tries = 0;
+    var timer = setInterval(function() {
+      tries++;
       if (photoDataCache[idx]) {
         lbImg.src = photoDataCache[idx];
-        clearInterval(lbImg._loadTimer);
+        clearInterval(timer);
+      } else if (tries > 40) {
+        clearInterval(timer);
+        if (p.url && !p.url.includes('raw.githubusercontent')) lbImg.src = p.url;
       }
-      if (++retries > 30) clearInterval(lbImg._loadTimer);
-    }, 300);
+    }, 250);
   }
-  document.getElementById('lightboxCaption').textContent = p.name || '照片';
-  document.getElementById('lightbox').classList.add('active');
-  document.body.style.overflow = 'hidden';
 };
 window.closeLightbox = function() {
   document.getElementById('lightbox').classList.remove('active');
