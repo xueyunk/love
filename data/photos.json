@@ -30,5 +30,13 @@
     "url": "https://cdn.jsdelivr.net/gh/xueyunk/love@master/data/photos/photo_1780288605545_0.jpg",
     "size": 453987,
     "time": 1780288605545
+  },
+  {
+    "name": "屏幕截图 2026-05-04 153700.png",
+    "filename": "photo_1780375397982_0.png",
+    "apiPath": "photos/photo_1780375397982_0.png",
+    "url": "https://cdn.jsdelivr.net/gh/xueyunk/love@master/data/photos/photo_1780375397982_0.png",
+    "size": 30981,
+    "time": 1780375397982
   }
 ]
