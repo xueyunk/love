@@ -800,8 +800,6 @@ function renderGallery(showAll) {
   }
 }
 
-var photoDataCache = {};
-
 function loadPhoto(idx, img) {
   if (!img) img = document.querySelector('.lazy-photo[data-pidx="' + idx + '"]');
   if (!img || img._loading) return;
@@ -809,12 +807,32 @@ function loadPhoto(idx, img) {
   var p = photosCache[idx];
   if (!p) { img._loading = false; return; }
 
+  // 1. In-memory cache (uploaded this session)
   if (photoDataCache[idx]) {
     img.src = photoDataCache[idx];
     img._loading = false;
     return;
   }
 
+  // 2. Try CDN (fast, cached after ~1min)
+  if (p.cdnUrl) {
+    img.src = p.cdnUrl;
+    img.onerror = function() {
+      // CDN failed, try API
+      if (!img._apiTried) {
+        img._apiTried = true;
+        loadFromApi(idx, img);
+      }
+    };
+    img.onload = function() { img._loading = false; };
+  } else {
+    loadFromApi(idx, img);
+  }
+}
+
+function loadFromApi(idx, img) {
+  var p = photosCache[idx];
+  if (!p || !p.apiPath) { img._loading = false; return; }
   fetch(GITHUB_API + p.apiPath + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
@@ -822,15 +840,11 @@ function loadPhoto(idx, img) {
     return r.json();
   }).then(function(data) {
     if (data && data.content) {
-      var ext = (p.filename || '').split('.').pop() || 'jpg';
-      var mime = 'image/' + (ext === 'png' ? 'png' : ext === 'gif' ? 'gif' : ext === 'webp' ? 'webp' : 'jpeg');
-      var dataUrl = 'data:' + mime + ';base64,' + data.content.replace(/\s/g, '');
+      var dataUrl = 'data:image/jpeg;base64,' + data.content.replace(/\s/g, '');
       photoDataCache[idx] = dataUrl;
       img.src = dataUrl;
     }
-  }).catch(function() {
-    if (p.url && !p.url.includes('raw.githubusercontent')) img.src = p.url;
-  });
+  }).catch(function() {});
   img._loading = false;
 }
 
@@ -949,15 +963,18 @@ function uploadPhotos(input) {
     var file = files[index];
     compressImage(file).then(function(b64) {
       var ts = Date.now();
-      var ext = 'jpg'; // compression always outputs JPEG
-      var filename = 'photo_' + ts + '_' + index + '.' + ext;
-      var rawB64 = b64.split(',')[1]; // remove data:xxx;base64, prefix
+      var filename = 'photo_' + ts + '_' + index + '.jpg';
+      var rawB64 = b64.split(',')[1];
+      var newIdx = photosCache.length;
+      // Save to cache immediately for instant display on this device
+      photoDataCache[newIdx] = b64;
+      var cdnUrl = CDN_BASE + 'photos/' + filename;
       return githubUploadFile('photos/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
         photosCache.push({
           name: file.name,
           filename: filename,
           apiPath: 'photos/' + filename,
-          url: CDN_BASE + 'photos/' + filename,
+          cdnUrl: cdnUrl,
           size: file.size,
           time: ts
         });
