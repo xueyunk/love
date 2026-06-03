@@ -814,17 +814,20 @@ function loadPhoto(idx, img) {
     return;
   }
 
-  // 2. Try CDN (fast, cached after ~1min)
-  if (p.cdnUrl) {
-    img.src = p.cdnUrl;
+  // 2. Try CDN (cdn.jsdelivr.net) - works for both cdnUrl and old url fields
+  var cdn = p.cdnUrl || p.url || '';
+  if (cdn && cdn.indexOf('jsdelivr') > -1) {
+    img.src = cdn;
     img.onerror = function() {
-      // CDN failed, try API
       if (!img._apiTried) {
         img._apiTried = true;
         loadFromApi(idx, img);
       }
     };
     img.onload = function() { img._loading = false; };
+  } else if (cdn) {
+    // Old raw.githubusercontent URL - won't work, go directly to API
+    loadFromApi(idx, img);
   } else {
     loadFromApi(idx, img);
   }
@@ -832,8 +835,18 @@ function loadPhoto(idx, img) {
 
 function loadFromApi(idx, img) {
   var p = photosCache[idx];
-  if (!p || !p.apiPath) { img._loading = false; return; }
-  fetch(GITHUB_API + p.apiPath + '?ref=' + DATA_BRANCH, {
+  if (!p) { img._loading = false; return; }
+  // Derive apiPath: use apiPath if set, otherwise extract from url/cdnUrl or use filename
+  var apiPath = p.apiPath;
+  if (!apiPath) {
+    if (p.filename) apiPath = 'photos/' + p.filename;
+    else if (p.url) {
+      var m = p.url.match(/data\/photos\/[^?#]+/);
+      apiPath = m ? m[0] : null;
+    }
+  }
+  if (!apiPath) { img._loading = false; return; }
+  fetch(GITHUB_API + apiPath + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
