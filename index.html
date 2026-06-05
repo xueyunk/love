@@ -115,7 +115,7 @@ section { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; pad
 .section-title { text-align: center; margin-bottom: 48px; }
 .section-title h2 { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2rem, 5vw, 3rem); color: var(--deep); }
 .section-title .line { width: 60px; height: 3px; background: linear-gradient(90deg, var(--pink), var(--gold)); margin: 12px auto; border-radius: 3px; }
-  
+
 /* Glass Card */
 .glass-card { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 32px; box-shadow: 0 8px 32px rgba(196,69,105,0.1); transition: transform 0.3s, box-shadow 0.3s; }
 .glass-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(196,69,105,0.18); }
@@ -282,7 +282,7 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
 </style>
 </head>
 <body>
-  
+
 <!-- Password -->
 <div class="password-overlay" id="pwdOverlay">
   <div class="pwd-heart">💕</div>
@@ -387,7 +387,7 @@ footer .footer-hearts { font-size: 1.2rem; margin-bottom: 8px; }
     <div class="messages-list" id="messagesList"><div class="empty-msgs">⏳ 加载中…</div></div>
   </div>
 </section>
-  
+
 <!-- Anniversary Countdown -->
 <section id="countdown">
   <div class="section-title"><h2>下一个纪念日</h2><div class="line"></div><p style="margin-top:8px;opacity:0.6;font-size:0.9rem;">距离在一起的第 <strong id="nextAnniversaryYears">1</strong> 周年还有</p></div>
@@ -510,6 +510,8 @@ document.getElementById('pwdInput').focus();
 // ==================== GITHUB API ====================
 var GITHUB_ONLINE = false;
 var CDN_BASE = 'https://cdn.jsdelivr.net/gh/xueyunk/love@master/data/';
+// Load data files from same GitHub Pages site (most reliable, no auth needed)
+function pagesUrl(path) { return 'data/' + path + '?t=' + Date.now(); }
 
 function strToBase64(str) {
   var bytes = new TextEncoder().encode(str);
@@ -667,14 +669,17 @@ function enqueueSave(type, fn) {
 var messagesCache = [];
 
 function loadMessages() {
-  return githubGet('messages.json').then(function(data) {
-    messagesCache = data || [];
-    renderMessages();
-  }).catch(function(err) {
-    console.error('Load messages failed:', err);
-    messagesCache = [];
-    renderMessages();
-  });
+  return fetch('data/messages.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { if (!r.ok) throw new Error('Status ' + r.status); return r.json(); })
+    .catch(function() { return githubGet('messages.json'); })
+    .then(function(data) {
+      messagesCache = data || [];
+      renderMessages();
+    }).catch(function(err) {
+      console.error('Load messages failed:', err);
+      messagesCache = [];
+      renderMessages();
+    });
 }
 
 function saveMessages() {
@@ -747,19 +752,30 @@ function esc(str) {
   var div = document.createElement('div'); div.textContent = str; return div.innerHTML;
 }
 
-// ==================== PHOTOS (GitHub) ====================
+// ==================== PHOTOS ====================
 var photosCache = [];
 
 function loadPhotos() {
-  return githubGet('photos.json').then(function(data) {
-    photosCache = data || [];
-    renderGallery();
-    renderAdminPhotos();
-  }).catch(function() {
-    photosCache = [];
-    renderGallery();
-    renderAdminPhotos();
-  });
+  // Priority: GitHub Pages (same domain, fastest) → API (with auth)
+  return fetch('data/photos.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { if (!r.ok) throw new Error('Status ' + r.status); return r.json(); })
+    .catch(function() {
+      return githubGet('photos.json');
+    }).then(function(data) {
+      photosCache = data || [];
+      // Pre-populate photoDataCache from loaded data
+      for (var i = 0; i < photosCache.length; i++) {
+        if (photosCache[i].data && !photoDataCache[i]) {
+          photoDataCache[i] = photosCache[i].data;
+        }
+      }
+      renderGallery();
+      renderAdminPhotos();
+    }).catch(function() {
+      photosCache = [];
+      renderGallery();
+      renderAdminPhotos();
+    });
 }
 
 function savePhotos() {
@@ -804,62 +820,28 @@ function renderGallery(showAll) {
 function loadPhoto(idx, img) {
   if (!img) img = document.querySelector('.lazy-photo[data-pidx="' + idx + '"]');
   if (!img || img._loading) return;
-  img._loading = true;
   var p = photosCache[idx];
-  if (!p) { img._loading = false; return; }
+  if (!p) return;
 
-  // 1. In-memory cache (uploaded this session)
-  if (photoDataCache[idx]) {
-    img.src = photoDataCache[idx];
-    img._loading = false;
+  // Data is already in photosCache (loaded from photos.json)
+  if (p.data) {
+    img.src = p.data;
+    photoDataCache[idx] = p.data;
     return;
   }
 
-  // 2. Try CDN (cdn.jsdelivr.net) - works for both cdnUrl and old url fields
-  var cdn = p.cdnUrl || p.url || '';
-  if (cdn && cdn.indexOf('jsdelivr') > -1) {
-    img.src = cdn;
-    img.onerror = function() {
-      if (!img._apiTried) {
-        img._apiTried = true;
-        loadFromApi(idx, img);
-      }
-    };
-    img.onload = function() { img._loading = false; };
-  } else if (cdn) {
-    // Old raw.githubusercontent URL - won't work, go directly to API
-    loadFromApi(idx, img);
-  } else {
-    loadFromApi(idx, img);
-  }
-}
-
-function loadFromApi(idx, img) {
-  var p = photosCache[idx];
-  if (!p) { img._loading = false; return; }
-  // Derive apiPath: use apiPath if set, otherwise extract from url/cdnUrl or use filename
-  var apiPath = p.apiPath;
-  if (!apiPath) {
-    if (p.filename) apiPath = 'photos/' + p.filename;
-    else if (p.url) {
-      var m = p.url.match(/data\/photos\/[^?#]+/);
-      apiPath = m ? m[0] : null;
-    }
-  }
-  if (!apiPath) { img._loading = false; return; }
-  fetch(GITHUB_API + apiPath + '?ref=' + DATA_BRANCH, {
+  // Legacy: fallback to API for old photos without inline data
+  img._loading = true;
+  fetch(GITHUB_API + p.apiPath + '?ref=' + DATA_BRANCH, {
     headers: { 'Authorization': 'token ' + GITHUB_TOKEN }
   }).then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   }).then(function(data) {
     if (data && data.content) {
-      var dataUrl = 'data:image/jpeg;base64,' + data.content.replace(/\s/g, '');
-      photoDataCache[idx] = dataUrl;
-      img.src = dataUrl;
+      img.src = 'data:image/jpeg;base64,' + data.content.replace(/\s/g, '');
     }
-  }).catch(function() {});
-  img._loading = false;
+  }).catch(function(){});
 }
 
 window.deletePhoto = function(index) {
@@ -980,15 +962,14 @@ function uploadPhotos(input) {
       var filename = 'photo_' + ts + '_' + index + '.jpg';
       var rawB64 = b64.split(',')[1];
       var newIdx = photosCache.length;
-      // Save to cache immediately for instant display on this device
       photoDataCache[newIdx] = b64;
-      var cdnUrl = CDN_BASE + 'photos/' + filename;
+      var apiPath = 'photos/' + filename;
       return githubUploadFile('photos/' + filename, rawB64, 'Upload ' + filename).then(function(result) {
         photosCache.push({
           name: file.name,
           filename: filename,
-          apiPath: 'photos/' + filename,
-          cdnUrl: cdnUrl,
+          apiPath: apiPath,
+          data: b64,  // inline base64 - all devices get photo instantly
           size: file.size,
           time: ts
         });
@@ -1008,7 +989,7 @@ function uploadPhotos(input) {
 function addPhotoByUrl() {
   var url = document.getElementById('photoUrlInput').value.trim();
   if (!url) { showToast('请粘贴图片链接'); return; }
-  photosCache.push({ name: '网络图片', url: url, size: 0, time: Date.now() });
+  photosCache.push({ name: '网络图片', data: url, size: 0, time: Date.now() });
   savePhotos().then(function() {
     renderGallery();
     renderAdminPhotos();
@@ -1036,15 +1017,18 @@ function renderAdminPhotos() {
 var videosCache = [];
 
 function loadVideos() {
-  return githubGet('videos.json').then(function(data) {
-    videosCache = data || [];
-    renderVideos();
-    renderAdminVideos();
-  }).catch(function() {
-    videosCache = [];
-    renderVideos();
-    renderAdminVideos();
-  });
+  return fetch('data/videos.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { if (!r.ok) throw new Error('Status ' + r.status); return r.json(); })
+    .catch(function() { return githubGet('videos.json'); })
+    .then(function(data) {
+      videosCache = data || [];
+      renderVideos();
+      renderAdminVideos();
+    }).catch(function() {
+      videosCache = [];
+      renderVideos();
+      renderAdminVideos();
+    });
 }
 
 function saveVideos() {
@@ -1188,7 +1172,10 @@ function stopMusic() {
 }
 
 function loadMusic() {
-  return githubGet('music.json').then(function(data) {
+  return fetch('data/music.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { if (!r.ok) throw new Error('Status ' + r.status); return r.json(); })
+    .catch(function() { return githubGet('music.json'); })
+    .then(function(data) {
     if (data && data.url) {
       musicMode = 'audio';
       customMusicUrl = data.url;
@@ -1197,9 +1184,7 @@ function loadMusic() {
       audioEl.load();
     }
     updateMusicStatus();
-  }).catch(function() {
-    updateMusicStatus();
-  });
+  }).catch(function() { updateMusicStatus(); });
 }
 
 function switchToAudio(url) {
@@ -1439,4 +1424,3 @@ function showError(msg) {
 </script>
 </body>
 </html>
-
